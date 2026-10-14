@@ -290,8 +290,45 @@ It was first chosen because "Dune" alone in English is Herbert and Villeneuve an
 nothing else, so the compound had to supply the missing noun; against «Шум Дюн»
 it is simply the same two words in the same order.
 
-What has **not** been established is whether the name is clear to use. The
-phrase is not the pop group and not the film, which makes it a much smaller
-exposure than «Дюна» was, but a trademark search over classes 9 and 42 and a
-sweep of RuStore, NashStore and AppGallery are still owed before the first
-upload. The earlier sweep covered «Баюн», «Тиша» and «Полог» — not this name.
+### What the stores say, searched 14 October 2026
+
+No app of this name in RuStore, NashStore or AppGallery, and nothing in the
+infant-sleep category carrying «Дюн» at all. The reasoning above also holds up
+as a measurement rather than a hope: searching RuStore for «Шум Дюн» returns the
+noise field — «Белый шум/Успокаивающие звуки», Whispy, «Белый шум для сна» —
+while «Дюн» on its own still returns «Дюна 2», «Open Dune 2», «Пазлы Дюна». One
+word moves the query out of the games cluster.
+
+What the same search makes plain is that the field itself is crowded, which the
+NashStore result had disguised. RuStore carries «Белый шум: ночник малыша» at
+5,0, «Белый шум/Успокаивающие звуки» and «Белый шум: звуки для сна и
+концентрации» at 4,8, «Белый шум для сна» at 4,5, and Whispy under Родителям at
+3,6. NashStore, by contrast, shows ten results of which the best-installed noise
+app has 108 installs. The name is free; the category is not.
+
+### The trademark exposure is DUNE HD, not the novel
+
+Searched over the indexed Rospatent mirror, not the register itself. No mark on
+«ШУМ ДЮН». What there is belongs to a line nobody would guess from the word:
+**DUNE**, certificate № 380119, held by ООО «ДЮНА ЭЛЕКТРОНИКС» — filed
+05.10.2006, registered 26.05.2009, exclusive right expired **5 October 2026**,
+which is recent enough that the six-month renewal window is still open. The same
+owner holds **DUNEHD / DUNE HD to 28.05.2032**, alive, plus THESTREAMER to
+11.11.2031. That is Dune HD, the media player and set-top box brand, fifteen
+years on the Russian market and stocked by DNS and Ozon; the company's ОКВЭД is
+wholesale of domestic electrical goods and manufacture of television receivers
+and monitors.
+
+So the exposure is asymmetric, and it falls on the English name. «Шум Дюн» is a
+different word from DUNE — plural genitive, prefixed, Cyrillic. **NoiseDune**
+contains it outright, and software would be filed in the same class 9 that
+DUNE HD occupies. Different goods, so not a block, but if one of the three names
+draws an objection it is that one — and it is the one that matters least here,
+since nothing but an English locale ever displays it.
+
+Still not established: the mirror does not publish Nice classes, so class 9 for
+DUNE HD is inferred from the owner's line of business rather than read off the
+record. An authoritative name search needs an account on Rospatent's search
+platform or an attorney's report, and NoiseDune is what to point it at. The
+AppGallery storefront reachable from here is the European one, so that result
+wants re-checking from Russia.

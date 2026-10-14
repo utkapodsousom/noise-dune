@@ -1,9 +1,24 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     // AGP 9 has Kotlin support built in; the kotlin-android plugin is gone.
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+}
+
+// The release signing key, described by a file that is not in the repository.
+// `keystore.properties.example` says what goes in it; the keystore it points at
+// lives outside the project tree, because a store that cannot be replaced should
+// not sit anywhere a `git clean` or a stray `rm -rf` can reach it.
+//
+// Absent, the file simply leaves the release build unsigned, which is what it has
+// always been: `assembleDebug` and the tests keep working on a fresh clone, and
+// the failure mode for a release is a missing signature rather than a broken
+// build. RELEASE.md is where the signed build is actually made.
+val signingProps = Properties().apply {
+    val file = rootProject.file("keystore.properties")
+    if (file.exists()) file.inputStream().use(::load)
 }
 
 android {
@@ -20,6 +35,24 @@ android {
         versionName = "1.0"
     }
 
+    signingConfigs {
+        if (signingProps.isNotEmpty()) {
+            create("release") {
+                storeFile = file(signingProps.getProperty("storeFile"))
+                storePassword = signingProps.getProperty("storePassword")
+                keyAlias = signingProps.getProperty("keyAlias")
+                keyPassword = signingProps.getProperty("keyPassword")
+                // Both are AGP's defaults; stated so neither can be lost to a
+                // change of default. v2 is the one that matters — it is what
+                // Android 7 and later and the store's upload check verify — and
+                // the v1 JAR signature rides along for anything older in a
+                // toolchain that still reads it.
+                enableV1Signing = true
+                enableV2Signing = true
+            }
+        }
+    }
+
     buildTypes {
         debug {
             // So the tuning build can sit on the phone next to the real app
@@ -30,6 +63,7 @@ android {
             versionNameSuffix = "-dev"
         }
         release {
+            signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(

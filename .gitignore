@@ -12,3 +12,14 @@ captures/
 *.aab
 *.keystore
 !debug.keystore
+
+# The release signing key and its passwords. The keystore itself belongs
+# outside the repository entirely; these patterns are the second line.
+*.jks
+*.p12
+*.pem
+keystore.properties
+pepk_out.zip
+
+# Python leftovers from docs/icon.py
+__pycache__/

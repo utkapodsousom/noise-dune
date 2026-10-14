@@ -469,11 +469,11 @@ point by `icon.py` from the same constants as `NoiseField.kt`. It is gone: the
 logo in `design/noisedune-logo.svg` replaced it, drawn by hand in Inkscape, and
 the foot was not kept alongside it.
 
-What `icon.py` does now is convert that one drawing into the three launcher
-layers and the 512×512 store asset, so there is still exactly one description of
-the picture and everything else is a rendering of it. The old reason for
-generating the art — that the icon could not drift away from the app — survives
-the change of source.
+What `icon.py` does now is convert that one drawing into the two launcher layers
+and the 512×512 store asset, so there is still exactly one description of the
+picture and everything else is a rendering of it. The old reason for generating
+the art — that the icon could not drift away from the app — survives the change
+of source.
 
 Three things had to be decided in the conversion, and each of them is a number
 in the script.
@@ -492,18 +492,26 @@ app's sky, `#0C0A09` — close enough to the disc that the seam does not read as
 an edge, dark enough that a square mask looks deliberate rather than
 unfinished.
 
-**The monochrome layer is a line drawing.** A themed icon keeps only that
-layer's alpha and tints it, which turns anything filled into a solid shape: the
-emblem as drawn would come back as a plain white disc with nothing in it. What
-goes in instead is the drawing's three outlines — the ring and the two dune
-crests — as strokes on transparency, at 1.6 times their drawn width, because
-there they are the whole icon rather than a detail inside a coloured one. At
-48px the unboosted lines disappear; boosted they hold.
+**There is no monochrome layer.** Android 13's themed icons keep only that
+layer's alpha and tint it with a colour taken from the wallpaper, which turns
+anything filled into a solid shape — the emblem as drawn comes back as a plain
+white disc with nothing in it. The way out was to hand the layer the drawing's
+outlines instead, the ring and the two dune crests as strokes on transparency,
+thickened so they survive 48px. That was built, looked at, and thrown away: a
+thin ring with two waves in it is not this app, it is any app, and it read as a
+weather widget.
 
-The script measures the first of these off the drawing and fails if the artwork
-leaves the safe circle, and it fails too if the three outlines it needs are
-renamed or lose their stroke. Both are failures that are invisible until a
-particular launcher on a particular phone shows them.
+So the `<monochrome>` element is gone from both adaptive icons. The cost is
+narrow and known: with themed icons switched on, this is the one icon on the
+home screen that stays in colour while the rest go monochrome. Against that,
+the alternative was shipping a silhouette worth less than the thing it
+replaced. Reconsider if the emblem ever gains a shape that survives being
+reduced to one colour — which is a question about the drawing, not about the
+script.
+
+The script measures the placement off the drawing and fails if the artwork
+leaves the safe circle. That is a failure invisible until a particular launcher
+on a particular phone shows it.
 
 What is no longer true, and was: `design/play-store-icon-512-template.svg` is
 still an empty keyline sheet, and nothing is drawn in it. The store icon is the

@@ -8,8 +8,8 @@ the source: there is one drawing and three renderings of it.
 
     python3 docs/icon.py
 
-Writes app/src/main/res/drawable/ic_launcher_{background,foreground,monochrome}.xml
-and fails loudly if the artwork lands outside what a launcher mask allows.
+Writes app/src/main/res/drawable/ic_launcher_{background,foreground}.xml and
+fails loudly if the artwork lands outside what a launcher mask allows.
 
     python3 docs/icon.py --store
 
@@ -51,17 +51,9 @@ MASK_DIAMETER = 72.0   # the most generous mask there is
 # the disc that the seam between them does not read as an edge.
 SKY = "#FF0C0A09"
 
-# A themed icon keeps only the monochrome layer's alpha and tints it, so
-# anything filled becomes a solid blob: the emblem's sky alone would come out a
-# plain white disc with nothing in it. These three are the drawing's outlines —
-# the ring and the two dune crests — and as strokes on transparency they
-# survive the tinting as a line drawing.
-MONOCHROME = ("circle11", "path3", "path4")
-
-# Those strokes are between 1.0 and 2.1dp once placed, which is legible at
-# 144px and gone by 48. The line drawing has to carry the icon alone, so it is
-# allowed to be heavier than the same lines are inside the full-colour emblem.
-MONOCHROME_STROKE_BOOST = 1.6
+# There is deliberately no monochrome layer; see docs/decisions.md. Android 13's
+# themed icons would keep only its alpha, and nothing this emblem can be reduced
+# to was worth looking at.
 
 
 def style(element):
@@ -153,13 +145,13 @@ def argb(colour):
     return colour if len(colour) == 9 else "#FF" + colour.lstrip("#").upper()
 
 
-def path_element(shape, tint=None, boost=1.0):
+def path_element(shape):
     attrs = []
     if shape["fill"] != "none":
-        attrs.append(f'android:fillColor="{argb(tint or shape["fill"])}"')
+        attrs.append(f'android:fillColor="{argb(shape["fill"])}"')
     if shape["stroke"] != "none":
-        attrs.append(f'android:strokeColor="{argb(tint or shape["stroke"])}"')
-        attrs.append(f'android:strokeWidth="{shape["width"] * boost:g}"')
+        attrs.append(f'android:strokeColor="{argb(shape["stroke"])}"')
+        attrs.append(f'android:strokeWidth="{shape["width"]:g}"')
     attrs.append(f'android:pathData="{shape["d"]}"')
     body = "\n            ".join(attrs)
     return f"        <path\n            {body} />\n"
@@ -226,7 +218,7 @@ def store_icon(shapes, scale, tx, ty):
           f"{size / 1024:.0f} KB (limit 3 MB, no alpha channel)")
 
 
-def check(diameter, shapes):
+def check(diameter):
     """A launcher mask is unforgiving and invisible until it isn't."""
     ok = True
 
@@ -244,16 +236,6 @@ def check(diameter, shapes):
 
     margin = (MASK_DIAMETER - TARGET_DIAMETER) / 2
     print(f"        {margin:.1f}dp of clearance to the roundest mask")
-
-    missing = [name for name in MONOCHROME
-               if name not in {s["id"] for s in shapes}]
-    if missing:
-        fail(f"the monochrome layer wants {missing}, which the drawing no longer has")
-
-    for name in MONOCHROME:
-        for shape in shapes:
-            if shape["id"] == name and shape["stroke"] == "none":
-                fail(f"{name} has no stroke; the monochrome layer would lose it")
     return ok
 
 
@@ -264,7 +246,7 @@ def main():
         raise SystemExit(f"{LOGO}: no circle11; the fit is measured off that ring")
     scale, tx, ty, drawn = fit(scale0, (tx0, ty0), rings[0])
 
-    if not check(drawn, shapes):
+    if not check(drawn):
         return 1
 
     if "--store" in sys.argv[1:]:
@@ -280,15 +262,6 @@ def main():
      The emblem: dunes under a night sky inside a ring. Placed at 63dp so that
      every mask an OEM might apply has something to crop into. -->
 """, group(scale, tx, ty, "".join(path_element(s) for s in shapes)))
-
-    write("monochrome", GENERATED + """
-     A themed icon keeps only this layer's alpha and tints it, so the emblem's
-     fills would come back as one solid disc. What is left is its outlines —
-     the ring and two crests — drawn heavier, because here they are the icon
-     rather than a detail inside it. -->
-""", group(scale, tx, ty, "".join(
-        path_element(s, tint="#FFFFFFFF", boost=MONOCHROME_STROKE_BOOST)
-        for s in shapes if s["id"] in MONOCHROME)))
     return 0
 
 

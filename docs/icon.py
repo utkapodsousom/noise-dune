@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regenerates the three launcher-icon vector drawables.
+"""Regenerates the three launcher-icon vector drawables, and the store icon.
 
 The icon is a baby's foot on the app's own dune field. Neither layer is drawn
 by hand: the dunes come out of the same generator as `NoiseField.kt`, and the
@@ -10,6 +10,13 @@ so both can be re-derived instead of re-eyeballed.
 
 Writes app/src/main/res/drawable/ic_launcher_{background,foreground,monochrome}.xml
 and fails loudly if the geometry drifts outside what a launcher mask allows.
+
+    python3 docs/icon.py --store
+
+Also writes store/assets/icon-512.png, the 512x512 asset the storefront asks
+for. It is the same geometry rasterised rather than a second drawing, which is
+the whole point: the icon on the listing cannot drift away from the icon on the
+phone, because there is only one description of it.
 """
 
 import math
@@ -52,7 +59,7 @@ DUNE_FILL = ["#FF141111", "#FF1B1613", "#FF241D17", "#FF30271D", "#FF3E3223"]
 AMBER = "#FFF8BA7D"
 
 
-def dune_path(dune):
+def dune_points(dune, step=STEP):
     crest, amplitude_ratio, wavelength, period, direction = dune
     crest_y = crest * FIELD
     amplitude = amplitude_ratio * FIELD * (0.5 + 0.5 * INTENSITY)
@@ -69,7 +76,12 @@ def dune_path(dune):
         points.append((xc, crest_y + offset))
         if xc >= FIELD:
             break
-        x += STEP
+        x += step
+    return points
+
+
+def dune_path(dune):
+    points = dune_points(dune)
     return "M0,108" + "".join(f"L{px:g},{py:.1f}" for px, py in points) + "L108,108Z"
 
 
@@ -122,10 +134,10 @@ def _cap(t):
     return 1.0
 
 
-def sole_outline():
+def sole_outline(samples=OUTLINE_SAMPLES):
     right, left = [], []
-    for i in range(OUTLINE_SAMPLES + 1):
-        t = i / OUTLINE_SAMPLES
+    for i in range(samples + 1):
+        t = i / samples
         y = SOLE_Y0 + SOLE_LENGTH * t
         k = _cap(t)
         right.append((SOLE_CX + _profile(t, LATERAL) * k, y))
@@ -143,9 +155,9 @@ def _dome_y(x):
 TOES = [(x, _dome_y(x) - r - TOE_GAP, r) for x, r in zip(TOE_X, TOE_R)]
 
 
-def place():
+def place(samples=OUTLINE_SAMPLES):
     """Tilt, centre and scale the foot onto the 108dp layer."""
-    outline = sole_outline()
+    outline = sole_outline(samples)
     extremes = list(outline)
     for x, y, r in TOES:
         extremes += [(x - r, y), (x + r, y), (x, y - r), (x, y + r)]
@@ -200,6 +212,85 @@ def write(name, comment, body):
     with open(path, "w") as f:
         f.write(VECTOR.format(comment=comment, body=body))
     print(f"wrote {os.path.relpath(path, os.getcwd())}")
+
+
+# --------------------------------------------------------------------------
+# The store icon
+# --------------------------------------------------------------------------
+# RuStore asks for 512x512, PNG or JPG, under 3 MB, filled with background
+# across its whole area and with no transparent edges. The last part is why this
+# is drawn in RGB with no alpha channel at all rather than composited and then
+# flattened: there is no transparency to lose track of.
+STORE_PX = 512
+STORE_SUPERSAMPLE = 4
+
+# A launcher shows the inner 72x72dp of a 108dp adaptive layer. Cropping to
+# exactly that is what makes the listing icon the same picture as the one on the
+# phone; the corners stay square because the storefront rounds them itself, and
+# a second rounding baked in here would show as a dark seam inside the mask.
+STORE_VIEW = (18.0, 72.0)
+
+# The vector drawables sample sparsely on purpose — a renderer curves between
+# the points and the files stay small. A raster has no such help, and at 512 px
+# this crop magnifies 108dp sevenfold, which is where the straight segments
+# between samples start to show as facets. Rendering at the drawables' own
+# sampling instead moves 1.9% of the pixels, by up to 88 of 255 on an edge, so
+# this is a visible difference rather than a precaution. It touches nothing that
+# ships in the APK: the drawables are written from the constants above.
+STORE_OUTLINE_SAMPLES = 1200
+STORE_DUNE_STEP = 0.25
+
+
+def _rgb(argb):
+    """`#AARRGGBB` or `#RRGGBB` to a tuple. Alpha is dropped, not blended: every
+    colour in this icon is opaque, and anything else is a bug worth a crash."""
+    digits = argb.lstrip("#")
+    if len(digits) == 8:
+        if digits[:2].upper() != "FF":
+            raise ValueError(f"{argb} is not opaque; the store icon has no alpha")
+        digits = digits[2:]
+    return tuple(int(digits[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def store_icon(path):
+    from PIL import Image, ImageDraw
+
+    outline, toes, _ = place(STORE_OUTLINE_SAMPLES)
+    origin, extent = STORE_VIEW
+    n = STORE_PX * STORE_SUPERSAMPLE
+    scale = n / extent
+
+    def px(x, y):
+        return ((x - origin) * scale, (y - origin) * scale)
+
+    # Supersampled and then reduced, because PIL's polygon fill has no
+    # anti-aliasing of its own and the dune crests are shallow diagonals, which
+    # is the worst case for a hard edge.
+    image = Image.new("RGB", (n, n), _rgb(SKY))
+    draw = ImageDraw.Draw(image)
+
+    for dune, fill in zip(DUNES, DUNE_FILL):
+        crest = dune_points(dune, STORE_DUNE_STEP)
+        points = [px(0, FIELD)] + [px(x, y) for x, y in crest] + [px(FIELD, FIELD)]
+        draw.polygon(points, fill=_rgb(fill))
+
+    amber = _rgb(AMBER)
+    draw.polygon([px(x, y) for x, y in outline], fill=amber)
+    for cx, cy, r in toes:
+        x0, y0 = px(cx - r, cy - r)
+        x1, y1 = px(cx + r, cy + r)
+        draw.ellipse([x0, y0, x1, y1], fill=amber)
+
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    image.resize((STORE_PX, STORE_PX), Image.LANCZOS).save(path, "PNG", optimize=True)
+
+    written = Image.open(path)
+    if written.size != (STORE_PX, STORE_PX) or written.mode != "RGB":
+        raise ValueError(f"wrote {written.size} {written.mode}, wanted 512x512 RGB")
+    size = os.path.getsize(path)
+    print(f"store: {os.path.relpath(path, os.getcwd())}  "
+          f"{written.size[0]}x{written.size[1]} {written.mode}, {size / 1024:.0f} KB "
+          f"(limit 3 MB, no alpha channel)")
 
 
 def check(outline, toes, worst):
@@ -257,6 +348,11 @@ def main():
     outline, toes, worst = place()
     if not check(outline, toes, worst):
         return 1
+
+    if "--store" in sys.argv[1:]:
+        store_icon(os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            "..", "store", "assets", "icon-512.png"))
 
     foot = foot_path(outline, toes)
 

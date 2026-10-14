@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <locale-config xmlns:android="http://schemas.android.com/apk/res/android">
-    <locale android:name="en" />
+    <!-- One locale, declared rather than omitted: it tells the system the app
+         speaks Russian only, so Android 13+ does not offer a per-app language
+         picker with nothing to pick. -->
     <locale android:name="ru" />
 </locale-config>

@@ -285,10 +285,20 @@ across the title is a cost accepted on purpose — «белый шум» is the 
 parents search, and store titles are indexed by token, so paying it buys the
 query. That title belongs to the store listing and appears nowhere in the build.
 
-English is **NoiseDune**, unchanged, and it now matches rather than compensates.
-It was first chosen because "Dune" alone in English is Herbert and Villeneuve and
-nothing else, so the compound had to supply the missing noun; against «Шум Дюн»
-it is simply the same two words in the same order.
+There is no second name, because there is no second locale. `values-en/` held a
+full English translation of all forty-eight strings and has been deleted; the
+strings live in `values/` alone and `locales_config.xml` declares Russian only,
+so an English phone now gets Russian like every other phone. The app ships on
+Russian stores to people who read Russian, and the translation was a second copy
+of every string to keep in step on behalf of nobody.
+
+**NoiseDune** survives, but as the project's own name rather than a name the app
+answers to: it is the README title, `rootProject.name`, the `ru.noisedune`
+package and the `NoiseDuneApp` / `NoiseDuneTheme` identifiers. It was coined
+because "Dune" alone in English is Herbert and Villeneuve and nothing else, so
+the compound had to supply the missing noun; against «Шум Дюн» it is the same two
+words in the same order, which is why it was worth keeping in the code when it
+stopped being shown to anyone.
 
 ### What the stores say, searched 14 October 2026
 
@@ -319,16 +329,20 @@ years on the Russian market and stocked by DNS and Ozon; the company's ОКВЭ�
 wholesale of domestic electrical goods and manufacture of television receivers
 and monitors.
 
-So the exposure is asymmetric, and it falls on the English name. «Шум Дюн» is a
-different word from DUNE — plural genitive, prefixed, Cyrillic. **NoiseDune**
-contains it outright, and software would be filed in the same class 9 that
-DUNE HD occupies. Different goods, so not a block, but if one of the three names
-draws an objection it is that one — and it is the one that matters least here,
-since nothing but an English locale ever displays it.
+The exposure was asymmetric, and it fell on the English name: «Шум Дюн» is a
+different word from DUNE — plural genitive, prefixed, Cyrillic — while
+**NoiseDune** contains it outright, and software would be filed in the same
+class 9 that DUNE HD occupies. Deleting the English locale is what closes that
+gap, and it closes it almost entirely rather than by argument. A trademark is
+infringed by use in trade for the relevant goods; NoiseDune is no longer offered
+to anyone under any locale, in any store, on any icon. What is left of it is a
+package identifier and a repository title, which nothing is sold under.
+
+The name to clear, then, is **«Шум Дюн»**, and against DUNE it is the easy half
+of the pair.
 
 Still not established: the mirror does not publish Nice classes, so class 9 for
 DUNE HD is inferred from the owner's line of business rather than read off the
-record. An authoritative name search needs an account on Rospatent's search
-platform or an attorney's report, and NoiseDune is what to point it at. The
-AppGallery storefront reachable from here is the European one, so that result
-wants re-checking from Russia.
+record, and an authoritative search still needs an account on Rospatent's search
+platform or an attorney's report. The AppGallery storefront reachable from here
+is the European one, so that result wants re-checking from Russia.

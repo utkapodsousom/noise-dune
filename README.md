@@ -48,10 +48,11 @@ accounts, no analytics. The app has no `INTERNET` permission at all.
   screen. Ducks under a navigation prompt, pauses for a phone call, and pauses
   when headphones are unplugged rather than blasting the room through the
   speaker.
-- **Russian and English.** Russian is the default: it lives in `values/`, with
-  English in `values-en/`. A Russian phone gets Russian, an English one English,
-  and anything else falls back to Russian rather than to a language the people
-  this was written for do not read.
+- **Russian, and only Russian.** The strings live in `values/` with no second
+  locale, and `locales_config.xml` declares that one language, so the system
+  offers no per-app picker. Every phone gets Russian whatever it is set to. The
+  app ships on Russian stores to people who read Russian; an English build would
+  have been a second copy of every string to keep in step for nobody.
 
 ## Building
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Resources only, no code: a build-type source set is structurally absent from
+    release, so there is nothing here to strip or to get wrong.
+
+    The debug build carries `applicationIdSuffix = ".dev"` so it installs
+    alongside the real app. Without this override both would show the same name
+    in the launcher, which is a bad way to find out which one you just opened at
+    3 a.m.
+-->
+<resources>
+    <string name="app_name">Дюна (dev)</string>
+</resources>

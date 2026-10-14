@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="play-store-icon-template"
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   inkscape:version="1.x"
+   sodipodi:docname="play-store-icon-512-template.svg"
+   inkscape:export-filename="ic_playstore_512.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+
+  <sodipodi:namedview
+     id="namedview"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="true"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     units="px"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:zoom="1"
+     inkscape:cx="256"
+     inkscape:cy="256"
+     inkscape:current-layer="layer-artwork">
+
+    <!-- Сетка 192-grid Material, перенесённая на 512 px: 1 клетка = 2,6667 px, жирная линия каждые 8 клеток = 21,3333 px -->
+    <inkscape:grid
+       id="grid-192"
+       type="xygrid"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="2.6666667"
+       spacingy="2.6666667"
+       empspacing="8"
+       visible="false"
+       enabled="true" />
+
+    <!-- ВЕРТИКАЛЬНЫЕ НАПРАВЛЯЮЩИЕ -->
+    <sodipodi:guide id="gv1" position="21.3333,256"  orientation="1,0" inkscape:label="live area L (21,33)"  inkscape:locked="true" />
+    <sodipodi:guide id="gv2" position="53.3333,256"  orientation="1,0" inkscape:label="square L (53,33)"     inkscape:locked="true" />
+    <sodipodi:guide id="gv3" position="85.3333,256"  orientation="1,0" inkscape:label="rect L (85,33)"       inkscape:locked="true" />
+    <sodipodi:guide id="gv4" position="256,256"      orientation="1,0" inkscape:label="center X"             inkscape:locked="true" />
+    <sodipodi:guide id="gv5" position="426.6667,256" orientation="1,0" inkscape:label="rect R (426,67)"      inkscape:locked="true" />
+    <sodipodi:guide id="gv6" position="458.6667,256" orientation="1,0" inkscape:label="square R (458,67)"    inkscape:locked="true" />
+    <sodipodi:guide id="gv7" position="490.6667,256" orientation="1,0" inkscape:label="live area R (490,67)" inkscape:locked="true" />
+
+    <!-- ГОРИЗОНТАЛЬНЫЕ НАПРАВЛЯЮЩИЕ -->
+    <sodipodi:guide id="gh1" position="256,21.3333"  orientation="0,1" inkscape:label="live area (21,33)"  inkscape:locked="true" />
+    <sodipodi:guide id="gh2" position="256,53.3333"  orientation="0,1" inkscape:label="square (53,33)"     inkscape:locked="true" />
+    <sodipodi:guide id="gh3" position="256,85.3333"  orientation="0,1" inkscape:label="rect (85,33)"       inkscape:locked="true" />
+    <sodipodi:guide id="gh4" position="256,256"      orientation="0,1" inkscape:label="center Y"           inkscape:locked="true" />
+    <sodipodi:guide id="gh5" position="256,426.6667" orientation="0,1" inkscape:label="rect (426,67)"      inkscape:locked="true" />
+    <sodipodi:guide id="gh6" position="256,458.6667" orientation="0,1" inkscape:label="square (458,67)"    inkscape:locked="true" />
+    <sodipodi:guide id="gh7" position="256,490.6667" orientation="0,1" inkscape:label="live area (490,67)" inkscape:locked="true" />
+
+    <!-- ДИАГОНАЛИ -->
+    <sodipodi:guide id="gd1" position="256,256" orientation="0.70710678,0.70710678"  inkscape:label="diag ↘" inkscape:locked="true" />
+    <sodipodi:guide id="gd2" position="256,256" orientation="0.70710678,-0.70710678" inkscape:label="diag ↗" inkscape:locked="true" />
+  </sodipodi:namedview>
+
+  <defs id="defs">
+    <!-- Маска скругления Google Play: r = 30% от 512 = 153,6 px.
+         Можно применить к группе артворка (Object > Clip > Set) ТОЛЬКО для предпросмотра.
+         Перед экспортом клип нужно снять — ассет загружается квадратным. -->
+    <clipPath id="playMask" clipPathUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="512" height="512" rx="153.6" ry="153.6" id="playMaskRect" />
+    </clipPath>
+  </defs>
+
+  <!-- ============================================================
+       СЛОЙ 1. ФОН — обязателен, full-bleed, без прозрачности.
+       Замени цвет / положи сюда свою заливку или градиент.
+       ============================================================ -->
+  <g inkscape:groupmode="layer" id="layer-bg" inkscape:label="1 · ФОН (full-bleed, 512×512)" style="display:inline">
+    <rect id="bg" x="0" y="0" width="512" height="512" fill="#ffffff" />
+  </g>
+
+  <!-- ============================================================
+       СЛОЙ 2. АРТВОРК — рисуй логотип здесь.
+       ============================================================ -->
+  <g inkscape:groupmode="layer" id="layer-artwork" inkscape:label="2 · АРТВОРК (твой логотип)" style="display:inline">
+    <!-- твоя графика -->
+  </g>
+
+  <!-- ============================================================
+       СЛОЙ 3. КЕЙЛАЙНЫ — заблокирован. Скрой перед экспортом.
+       Сетка Material product icons (192) × 2,6667 → 512.
+       ============================================================ -->
+  <g inkscape:groupmode="layer" id="layer-keylines" inkscape:label="3 · КЕЙЛАЙНЫ (скрыть перед экспортом)"
+     sodipodi:insensitive="true" style="display:inline">
+    <g fill="none" stroke="#ff00ff" stroke-opacity="0.55" stroke-width="1.5" id="keyline-shapes">
+      <!-- Live area / внешний отступ 21,3333 px (8dp от 192-сетки) -->
+      <rect id="kl-livearea" x="21.3333" y="21.3333" width="469.3333" height="469.3333"
+            stroke-dasharray="6,5" />
+      <!-- Круг ⌀ 469,3333 px (176 из 192) -->
+      <circle id="kl-circle" cx="256" cy="256" r="234.6667" />
+      <!-- Квадрат 405,3333 × 405,3333 px (152 из 192) -->
+      <rect id="kl-square" x="53.3333" y="53.3333" width="405.3333" height="405.3333" />
+      <!-- Вертикальный прямоугольник 341,3333 × 469,3333 px (128 × 176) -->
+      <rect id="kl-rect-v" x="85.3333" y="21.3333" width="341.3333" height="469.3333" />
+      <!-- Горизонтальный прямоугольник 469,3333 × 341,3333 px (176 × 128) -->
+      <rect id="kl-rect-h" x="21.3333" y="85.3333" width="469.3333" height="341.3333" />
+    </g>
+    <!-- Оси и диагонали -->
+    <g stroke="#00b0ff" stroke-opacity="0.45" stroke-width="1" id="keyline-axes">
+      <path d="M 256,0 V 512 M 0,256 H 512 M 0,0 L 512,512 M 512,0 L 0,512" fill="none" />
+    </g>
+  </g>
+
+  <!-- ============================================================
+       СЛОЙ 4. ПРЕДПРОСМОТР МАСКИ PLAY — заблокирован.
+       Красные уголки = то, что Google Play срежет (r = 153,6 px = 30%).
+       Скрой перед экспортом; сам ассет остаётся квадратным.
+       ============================================================ -->
+  <g inkscape:groupmode="layer" id="layer-mask-preview" inkscape:label="4 · СРЕЗ УГЛОВ Play r=153,6 (скрыть перед экспортом)"
+     sodipodi:insensitive="true" style="display:inline">
+    <path id="corner-cutoff"
+          fill="#ff1744" fill-opacity="0.3" fill-rule="evenodd"
+          d="M 0,0 H 512 V 512 H 0 Z
+             M 153.6,0 H 358.4 A 153.6,153.6 0 0 1 512,153.6 V 358.4 A 153.6,153.6 0 0 1 358.4,512
+             H 153.6 A 153.6,153.6 0 0 1 0,358.4 V 153.6 A 153.6,153.6 0 0 1 153.6,0 Z" />
+    <rect id="play-mask-outline" x="0" y="0" width="512" height="512" rx="153.6" ry="153.6"
+          fill="none" stroke="#ff1744" stroke-opacity="0.8" stroke-width="2" stroke-dasharray="8,6" />
+  </g>
+
+  <!-- ============================================================
+       СЛОЙ 5. ПАМЯТКА — скрыть/удалить перед экспортом.
+       ============================================================ -->
+  <g inkscape:groupmode="layer" id="layer-notes" inkscape:label="5 · ПАМЯТКА (удалить перед экспортом)"
+     sodipodi:insensitive="true" style="display:none">
+    <text x="24" y="40" font-family="sans-serif" font-size="15" fill="#111111" id="notes-text">
+      <tspan x="24" dy="0">512×512 · 32-bit PNG · sRGB · ≤ 1024 КБ</tspan>
+      <tspan x="24" dy="20">Квадрат во всю площадь. НЕ скруглять углы самому.</tspan>
+      <tspan x="24" dy="20">НЕ добавлять drop shadow — Play рисует её сам.</tspan>
+      <tspan x="24" dy="20">Прозрачности быть не должно.</tspan>
+      <tspan x="24" dy="20">Свет и тени ВНУТРИ арта — можно.</tspan>
+    </text>
+  </g>
+
+</svg>

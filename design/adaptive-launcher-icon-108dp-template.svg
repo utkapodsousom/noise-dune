@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="adaptive-icon-template"
+   width="108"
+   height="108"
+   viewBox="0 0 108 108"
+   inkscape:version="1.x"
+   sodipodi:docname="adaptive-launcher-icon-108dp-template.svg"
+   inkscape:export-filename="ic_launcher_preview.png"
+   inkscape:export-xdpi="384"
+   inkscape:export-ydpi="384">
+
+  <sodipodi:namedview
+     id="namedview"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="true"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     units="px"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:zoom="8"
+     inkscape:cx="54"
+     inkscape:cy="54"
+     inkscape:current-layer="layer-fg">
+
+    <inkscape:grid id="grid-1dp" type="xygrid" units="px" originx="0" originy="0"
+       spacingx="1" spacingy="1" empspacing="6" visible="false" enabled="true" />
+
+    <sodipodi:guide id="av1" position="18,54" orientation="1,0" inkscape:label="viewport L (18)"   inkscape:locked="true" />
+    <sodipodi:guide id="av2" position="21,54" orientation="1,0" inkscape:label="safe зона L (21)"  inkscape:locked="true" />
+    <sodipodi:guide id="av3" position="54,54" orientation="1,0" inkscape:label="center X"          inkscape:locked="true" />
+    <sodipodi:guide id="av4" position="87,54" orientation="1,0" inkscape:label="safe зона R (87)"  inkscape:locked="true" />
+    <sodipodi:guide id="av5" position="90,54" orientation="1,0" inkscape:label="viewport R (90)"   inkscape:locked="true" />
+
+    <sodipodi:guide id="ah1" position="54,18" orientation="0,1" inkscape:label="viewport (18)"  inkscape:locked="true" />
+    <sodipodi:guide id="ah2" position="54,21" orientation="0,1" inkscape:label="safe зона (21)" inkscape:locked="true" />
+    <sodipodi:guide id="ah3" position="54,54" orientation="0,1" inkscape:label="center Y"       inkscape:locked="true" />
+    <sodipodi:guide id="ah4" position="54,87" orientation="0,1" inkscape:label="safe зона (87)" inkscape:locked="true" />
+    <sodipodi:guide id="ah5" position="54,90" orientation="0,1" inkscape:label="viewport (90)"  inkscape:locked="true" />
+  </sodipodi:namedview>
+
+  <!-- ============================================================
+       СЛОЙ 1. BACKGROUND — уйдёт в ic_launcher_background.
+       Заливка на все 108×108, без прозрачности.
+       ============================================================ -->
+  <g inkscape:groupmode="layer" id="layer-bg" inkscape:label="1 · BACKGROUND (108×108 full-bleed)" style="display:inline">
+    <rect id="bg" x="0" y="0" width="108" height="108" fill="#ffffff" />
+  </g>
+
+  <!-- ============================================================
+       СЛОЙ 2. FOREGROUND — уйдёт в ic_launcher_foreground.
+       Логотип рисуй здесь. Холст тоже 108×108, но значимое —
+       только внутри круга ⌀66 по центру.
+       ============================================================ -->
+  <g inkscape:groupmode="layer" id="layer-fg" inkscape:label="2 · FOREGROUND (логотип)" style="display:inline">
+    <!-- твоя графика -->
+  </g>
+
+  <!-- ============================================================
+       СЛОЙ 3. ЗОНЫ — заблокирован, скрыть перед экспортом.
+       ============================================================ -->
+  <g inkscape:groupmode="layer" id="layer-zones" inkscape:label="3 · ЗОНЫ (скрыть перед экспортом)"
+     sodipodi:insensitive="true" style="display:inline">
+    <!-- Срезаемые 18dp по периметру: видно максимум центральные 72×72 -->
+    <path id="bleed-cutoff" fill="#ff1744" fill-opacity="0.18" fill-rule="evenodd"
+          d="M 0,0 H 108 V 108 H 0 Z M 18,18 H 90 V 90 H 18 Z" />
+    <!-- Границы видимой области 72×72 -->
+    <rect id="viewport-72" x="18" y="18" width="72" height="72"
+          fill="none" stroke="#ff1744" stroke-opacity="0.7" stroke-width="0.6" stroke-dasharray="2,1.5" />
+    <!-- Safe zone: круг ⌀66 — гарантированно виден при ЛЮБОЙ маске OEM -->
+    <circle id="safe-circle-66" cx="54" cy="54" r="33"
+            fill="none" stroke="#00c853" stroke-opacity="0.9" stroke-width="0.8" />
+    <!-- Варианты масок OEM для примерки -->
+    <g fill="none" stroke="#ff00ff" stroke-opacity="0.45" stroke-width="0.5" id="oem-masks">
+      <circle id="mask-circle" cx="54" cy="54" r="36" />
+      <rect id="mask-rounded" x="18" y="18" width="72" height="72" rx="16" ry="16" />
+      <rect id="mask-square"  x="18" y="18" width="72" height="72" rx="4"  ry="4"  />
+    </g>
+    <!-- Оси -->
+    <path id="axes" d="M 54,0 V 108 M 0,54 H 108" fill="none" stroke="#00b0ff" stroke-opacity="0.4" stroke-width="0.4" />
+  </g>
+
+</svg>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        The launcher label, so it is the short name: "Дюна — шум для сна" is the
+        store title and belongs in the store listing, not under the icon, where
+        a launcher gives it about ten characters before it elides.
+    -->
+    <string name="app_name">Дюна</string>
+
+    <string name="noise_white">Белый шум</string>
+    <string name="noise_pink">Розовый шум</string>
+    <string name="noise_brown">Коричневый шум</string>
+    <string name="noise_shush">Шшш</string>
+
+    <string name="noise_white_desc">Ровный спектр</string>
+    <string name="noise_pink_desc">−3 дБ/окт, мягче белого</string>
+    <string name="noise_brown_desc">−6 дБ/окт, низкий гул</string>
+    <string name="noise_shush_desc">Шипение с пиком на 3 кГц</string>
+
+    <!-- One word each: these go in pills a quarter of the screen wide. -->
+    <string name="noise_white_short">Белый</string>
+    <string name="noise_pink_short">Розовый</string>
+    <string name="noise_brown_short">Коричн.</string>
+    <string name="noise_shush_short">Шшш</string>
+
+    <!-- The metadata line: how loud, and when it stops. Must fit on one line. -->
+    <string name="meta_volume">%1$d%%</string>
+    <string name="meta_stops_at">Выключится в %1$s</string>
+
+    <string name="volume">Громкость</string>
+    <string name="timer">Автовыключение</string>
+    <string name="timer_off">Выкл</string>
+    <string name="timer_minutes">%1$d мин</string>
+
+    <string name="status_idle">Готов</string>
+    <string name="status_playing">Играет</string>
+    <string name="status_paused">Пауза</string>
+    <string name="status_fading_in">Нарастает · %1$s</string>
+    <string name="status_fading_out">Затухает</string>
+    <string name="status_remaining">Осталось %1$s</string>
+
+    <string name="action_play">Включить</string>
+    <string name="action_stop">Выключить</string>
+    <string name="action_pause">Пауза</string>
+    <string name="action_resume">Продолжить</string>
+    <string name="action_extend">+%1$d мин</string>
+    <string name="action_settings">Настройки</string>
+
+    <string name="settings_preferences">Параметры</string>
+
+    <string name="setting_fade_in">Плавное нарастание</string>
+    <string name="setting_fade_in_desc">%1$d с от тишины до заданной громкости</string>
+    <string name="setting_fade_out">Плавное затухание</string>
+    <string name="setting_fade_out_desc">%1$d с перед автовыключением</string>
+    <string name="setting_volume_cap">Ограничение громкости</string>
+    <string name="setting_volume_cap_desc">Держит верх шкалы на 6 дБ ниже</string>
+    <string name="setting_keep_screen_on">Не гасить экран</string>
+    <string name="setting_keep_screen_on_desc">Экран не выключается, пока приложение открыто</string>
+
+    <string name="safety_title">Берегите слух ребёнка</string>
+    <string name="safety_body">Держите уровень не выше 50 дБА на уровне кроватки и ставьте телефон не
+        ближе 2 м от неё — рекомендация Американской академии педиатрии. Приложение не может
+        измерить настоящую громкость: она зависит от динамика, системной громкости и
+        расстояния.</string>
+    <string name="safety_understood">Понятно</string>
+
+    <string name="notif_channel_name">Воспроизведение</string>
+    <string name="notif_channel_description">Управление, пока играет шум</string>
+    <string name="notif_paused">Пауза</string>
+    <string name="notif_remaining">Осталось %1$s</string>
+    <string name="notif_no_timer">Без автовыключения</string>
+</resources>

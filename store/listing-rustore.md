@@ -134,7 +134,9 @@ noiseduneapp@proton.me
 https://utkapodsousom.github.io/noise-dune/privacy/
 ```
 
-Текст готов, его остаётся опубликовать: [docs/privacy/index.html](../docs/privacy/index.html).
+Опубликована через GitHub Pages с ветки `main`, папка `/docs`. Исходник —
+[docs/privacy/index.html](../docs/privacy/index.html); правка доезжает до адреса
+примерно через минуту после пуша.
 
 ## Файлы
 

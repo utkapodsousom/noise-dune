@@ -31,6 +31,14 @@ import ru.noisedune.R
  * default behaviour of a sound machine is to be too loud. The wording avoids
  * implying the app knows the real level — it cannot; it sees neither the speaker
  * nor the distance.
+ *
+ * The 30 dBA in the copy is the Russian sanitary limit for a bedroom at night,
+ * attributed by document number in `NOTICE.md` rather than here: a regulation
+ * number in a card read at 3 a.m. buys nothing a parent can act on, while
+ * "a whisper, not a conversation" can be checked by ear with no meter. The
+ * same table's 45 dBA maximum is left out because this signal is continuous
+ * broadband noise, for which the equivalent and maximum levels coincide —
+ * the maximum governs transients, and there are none.
  */
 @Composable
 fun SafetyNotice(onAcknowledge: () -> Unit, modifier: Modifier = Modifier) {

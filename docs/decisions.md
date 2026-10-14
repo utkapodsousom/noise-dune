@@ -155,7 +155,55 @@ On by default, holding the top of the slider 6 dB lower. It is a guard rail, not
 a measurement: the app cannot see the speaker, the system volume or the distance
 to the cot, and the UI says so rather than implying a dBA figure it does not
 know. The 2014 *Pediatrics* study found all fourteen machines it measured were
-above 50 dBA at 30 cm, so a sound machine's default behaviour is to be too loud.
+above 50 dBA at 30 cm, so a sound machine's default behaviour is to be too loud —
+and the target it was too loud for, 50 dBA, is itself 20 dB above the Russian
+night-time limit the notice now quotes. The cap is the only lever the app has
+over any of that, and 6 dB of it.
+
+## The hearing-safety notice, and where its number comes from
+
+The notice used to quote American paediatric guidance: 50 dBA at the cot, device
+two metres away. For an app shipping on Russian stores that is a reference to a
+body the reader cannot check against anything that applies where they live, so
+it was replaced with the domestic norm — which turned out to be both more
+specific and considerably stricter.
+
+**СанПиН 1.2.3685-21**, approved by order of the Chief State Sanitary Doctor of
+the Russian Federation No. 2 of 28 January 2021, table 5.35. Its fifth row reads
+«Жилые комнаты квартир … спальные помещения в школах-интернатах, дошкольных
+образовательных организациях …» — apartment living rooms and the sleeping
+quarters of preschools in the same breath, which is as close as Russian
+regulation comes to naming a room where a small child sleeps. The limits there
+are 40 dBA equivalent and 55 dBA maximum by day, **30 and 45 by night** (23:00
+to 07:00). The full citation lives in `NOTICE.md`.
+
+Three things are worth recording about that choice, because none of them is
+visible from the number alone.
+
+**There is no Ministry of Health guidance to use instead.** Минздрав has clinical
+guidelines on noise-induced hearing loss — occupational, adult — and on
+sensorineural hearing loss in children, and neither gives a bedroom figure or
+mentions sound machines at all. The norm above is Роспотребнадзор's, not
+Минздрав's, and saying otherwise would be wrong. Russian consumer sources that
+look like an alternative (baby-sleep.ru, AmaroBaby, Фрутоняня) all quote 50–65 dB
+at 1–1.5 m, which is the American figure relabelled; citing them would have
+laundered the source rather than replaced it.
+
+**The norm governs penetrating noise, not deliberate sound.** Table 5.35 is about
+проникающий шум, and note 106 excludes noise from residents' own activity
+outright. Legally it does not bind a parent who switches a noise generator on.
+What it is good for is the question actually being asked — how quiet a room ought
+to be at night in this country — so the copy says the room «должно быть не
+громче», framing it as the benchmark it is rather than a rule about the app.
+
+**Only the 30 appears in the interface, and no document number.** The 45 dBA
+maximum is omitted because this signal is continuous broadband noise, for which
+the equivalent and maximum levels coincide; a maximum governs transients and
+there are none here, so printing it would have added a figure that cannot differ
+from the other one. The regulation number is omitted because a card read at three
+in the morning cannot be audited, only obeyed or ignored — what replaces it is
+«это шёпот, а не разговор», which a parent can check by ear with no meter. The
+number is in `NOTICE.md` for anyone who does want to audit it.
 
 ## The tuning panel, and what it does to the constants
 

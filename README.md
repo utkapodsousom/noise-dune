@@ -290,15 +290,25 @@ constants behind the dune field are in
 
 ## Hearing safety
 
-Keep the level at or below 50 dBA measured at the cot and the device at least
-2 m from it — [AAP guidance](https://riseandshine.childrensnational.org/baby-sound-machines-and-hearing-loss/).
+The reference figure is the Russian sanitary limit for a room slept in at night:
+**30 dBA equivalent, 45 dBA maximum**, from a table whose row covers apartment
+living rooms and the sleeping quarters of preschools and boarding schools alike.
+It is attributed by document number in [NOTICE.md](NOTICE.md). That is well below
+the 50 dBA this app used to quote from American paediatric guidance, so the
+advice got stricter, not looser, when it was localised.
+
 A 2014 *Pediatrics* study measured fourteen infant sleep machines and found every
 one of them above 50 dBA at 30 cm, so a sound machine being too loud is the
-default, not the exception.
+default, not the exception. That is a measurement rather than anybody's
+recommendation, and it is why the cap exists.
 
 The app shows this once on first run and keeps a volume cap on by default, but it
 cannot measure the actual sound pressure — that depends on the speaker, the
 system volume and the distance. Treat the cap as a guard rail, not a guarantee.
+The in-app wording carries the number and a household anchor for it — a whisper
+rather than a conversation — and no regulation number; see
+[docs/decisions.md](docs/decisions.md) for why, and for what the norm does and
+does not actually govern.
 
 ## Licence and attribution
 

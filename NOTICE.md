@@ -38,12 +38,17 @@ it**, and none should be, as the licence is incompatible with this project.
 
 ## Hearing safety guidance
 
-- American Academy of Pediatrics guidance as summarised by
-  [Children's National](https://riseandshine.childrensnational.org/baby-sound-machines-and-hearing-loss/):
-  at or below 50 dBA at the cot, device at least 2 m away.
+- СанПиН 1.2.3685-21, «Гигиенические нормативы и требования к обеспечению
+  безопасности и (или) безвредности для человека факторов среды обитания»,
+  утверждён постановлением Главного государственного санитарного врача РФ от
+  28.01.2021 № 2. Таблица 5.35, строка «Жилые комнаты квартир … спальные
+  помещения в школах-интернатах, дошкольных образовательных организациях …»:
+  с 23:00 до 7:00 — 30 дБА эквивалентный уровень звука, 45 дБА максимальный;
+  с 7:00 до 23:00 — 40 и 55 дБА. This is the figure the in-app notice states,
+  and the only place in this repository that carries the document number.
 - Hugh et al., "Infant Sleep Machines and Hazardous Sound Pressure Levels",
   *Pediatrics* 133(4), 2014 — measured fourteen infant sleep machines and found
-  all of them above 50 dBA at 30 cm.
+  all of them above 50 dBA at 30 cm. Cited as a measurement, not as guidance.
 
 ## Dependencies
 

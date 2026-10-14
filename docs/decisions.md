@@ -462,21 +462,50 @@ console enabled — that «Очистить все» does not remove, and a debu
 itself «Шум Дюн (dev)» there, which is the one screen in the whole app where the
 label is visible. It is worth adding later from a release build on a real phone.
 
-### The store icon is generated, not exported
+### The icon is the logo, converted rather than redrawn
 
-`design/play-store-icon-512-template.svg` is a keyline template with an empty
-artwork layer — grid, guides and a mask preview, waiting for a drawing that was
-never made there, because the icon was never drawn by hand. So the 512×512 asset
-comes out of [icon.py](icon.py) with `--store`, from the same constants as the
-launcher drawables: the field, the foot, the amber.
+The icon used to be a baby's foot on a generated dune field, built point by
+point by `icon.py` from the same constants as `NoiseField.kt`. It is gone: the
+logo in `design/noisedune-logo.svg` replaced it, drawn by hand in Inkscape, and
+the foot was not kept alongside it.
 
-It renders the inner 72×72dp of the 108dp layer, which is exactly what a
-launcher mask shows, and leaves the corners square because the storefront rounds
-them itself. Rasterised at four times and reduced, in RGB with no alpha channel
-at all — the store wants no transparent edges, and the way to not have them is
-to never have had any. The sampling is denser than the drawables use: at 512 px
-this crop magnifies 108dp sevenfold, and rendering at the drawables' own spacing
-moves 1.9% of the pixels by up to 88 of 255 along an edge.
+What `icon.py` does now is convert that one drawing into the three launcher
+layers and the 512×512 store asset, so there is still exactly one description of
+the picture and everything else is a rendering of it. The old reason for
+generating the art — that the icon could not drift away from the app — survives
+the change of source.
 
-What this buys is that the icon on the listing cannot drift from the icon on the
-phone. There is one description of the picture, and both come out of it.
+Three things had to be decided in the conversion, and each of them is a number
+in the script.
+
+**63dp.** The emblem is drawn to fill its own 72dp square: measured off the
+outer ring, including the half of its stroke that hangs outside its radius, it
+is 71.8dp across. A launcher shows 72dp and crops it with a mask of the OEM's
+choosing, so at that size a circular mask shaves the ring flush and some masks
+eat it. Placed at 63dp it sits inside Material's 44–66dp keyline range, inside
+the 66dp circle every mask is guaranteed to show, with 4.5dp of dark between
+the ring and the nearest crop.
+
+**The background is flat.** The emblem brings its own near-black disc, so the
+background layer is only what fills the corners a square mask leaves. It is the
+app's sky, `#0C0A09` — close enough to the disc that the seam does not read as
+an edge, dark enough that a square mask looks deliberate rather than
+unfinished.
+
+**The monochrome layer is a line drawing.** A themed icon keeps only that
+layer's alpha and tints it, which turns anything filled into a solid shape: the
+emblem as drawn would come back as a plain white disc with nothing in it. What
+goes in instead is the drawing's three outlines — the ring and the two dune
+crests — as strokes on transparency, at 1.6 times their drawn width, because
+there they are the whole icon rather than a detail inside a coloured one. At
+48px the unboosted lines disappear; boosted they hold.
+
+The script measures the first of these off the drawing and fails if the artwork
+leaves the safe circle, and it fails too if the three outlines it needs are
+renamed or lose their stroke. Both are failures that are invisible until a
+particular launcher on a particular phone shows them.
+
+What is no longer true, and was: `design/play-store-icon-512-template.svg` is
+still an empty keyline sheet, and nothing is drawn in it. The store icon is the
+same emblem as the launcher icon, rendered over the same sky and cropped to the
+same 72dp, square because the storefront rounds the corners itself.

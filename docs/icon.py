@@ -1,194 +1,136 @@
 #!/usr/bin/env python3
-"""Regenerates the three launcher-icon vector drawables, and the store icon.
+"""Turns the logo into the launcher icon and the store icon.
 
-The icon is a baby's foot on the app's own dune field. Neither layer is drawn
-by hand: the dunes come out of the same generator as `NoiseField.kt`, and the
-foot is a width profile swept along the sole rather than a set of tuned beziers,
-so both can be re-derived instead of re-eyeballed.
+The drawing lives in `design/noisedune-logo.svg` and is edited in Inkscape.
+This script is the only thing that copies it into the app, so the icon on the
+phone and the icon on the storefront cannot drift apart from each other or from
+the source: there is one drawing and three renderings of it.
 
     python3 docs/icon.py
 
 Writes app/src/main/res/drawable/ic_launcher_{background,foreground,monochrome}.xml
-and fails loudly if the geometry drifts outside what a launcher mask allows.
+and fails loudly if the artwork lands outside what a launcher mask allows.
 
     python3 docs/icon.py --store
 
-Also writes store/assets/icon-512.png, the 512x512 asset the storefront asks
-for. It is the same geometry rasterised rather than a second drawing, which is
-the whole point: the icon on the listing cannot drift away from the icon on the
-phone, because there is only one description of it.
+Also writes store/assets/icon-512.png, the 512x512 PNG the storefront asks for.
+Needs `rsvg-convert` and Pillow; the drawables need neither.
 """
 
-import math
 import os
+import re
+import subprocess
 import sys
+import xml.etree.ElementTree as ET
 
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                   "..", "app", "src", "main", "res", "drawable")
+HERE = os.path.dirname(os.path.abspath(__file__))
+LOGO = os.path.join(HERE, "..", "design", "noisedune-logo.svg")
+DRAWABLE = os.path.join(HERE, "..", "app", "src", "main", "res", "drawable")
+STORE = os.path.join(HERE, "..", "store", "assets", "icon-512.png")
+
+SVG = "{http://www.w3.org/2000/svg}"
 
 # --------------------------------------------------------------------------
-# The field
+# Where the artwork sits
 # --------------------------------------------------------------------------
-# Verbatim from the Dunes table in NoiseField.kt: crestRatio, amplitudeRatio,
-# wavelength, periodSeconds, direction. Keep these in step with that file.
-DUNES = [
-    (0.18, 0.12, 1.15, 70.0, 1.0),
-    (0.32, 0.15, 0.95, 55.0, -1.0),
-    (0.48, 0.16, 1.30, 42.0, 1.0),
-    (0.64, 0.14, 0.85, 32.0, -1.0),
-    (0.78, 0.13, 1.05, 25.0, 1.0),
-]
+# An adaptive icon is two 108dp layers of which a launcher shows the middle
+# 72dp, and the mask that crops them is the OEM's business: a circle, a
+# squircle, a rounded square. The emblem is drawn to fill its own 72dp square
+# edge to edge, which leaves a circular mask nothing to spare — the ring would
+# be shaved flush. 63dp is the diameter it gets instead: inside Material's
+# 44-66dp keyline range, inside the 66dp circle every mask is guaranteed to
+# show, and with 4.5dp of dark between the ring and the nearest crop.
+TARGET_DIAMETER = 63.0
 
-# Which moment of the field to freeze. Scanning the first two minutes, 86 seconds
-# is the phase where all five crests clear each other by the widest margin; most
-# phases collapse two of them into a single edge. Intensity 0 is the field at
-# rest, where the generator folds each amplitude halfway back toward its crest —
-# the state the app is in before anything is playing, which is the right thing
-# for an icon to show.
-SECONDS, INTENSITY = 86.0, 0.0
+FIELD = 108.0
+SAFE_DIAMETER = 66.0   # guaranteed visible under any mask
+MASK_DIAMETER = 72.0   # the most generous mask there is
 
-FIELD = 108.0  # adaptive-icon layers are 108x108dp
-STEP = 4.0     # sampling along the width; finer than the eye can tell at 48dp
-
-# The app's dune greys are neutral and sit on #000000. The icon's sky is the
-# warm near-black #0C0A09, so these are the same ramp shifted warm. The front
-# dune is the lightest thing here and still sits below the app's #353535 ceiling
-# in luminance (51.5 against 53).
+# The app's own sky, from Theme.kt. The emblem carries its own near-black disc;
+# this is what fills the corners a square mask leaves, and it is close enough to
+# the disc that the seam between them does not read as an edge.
 SKY = "#FF0C0A09"
-DUNE_FILL = ["#FF141111", "#FF1B1613", "#FF241D17", "#FF30271D", "#FF3E3223"]
-AMBER = "#FFF8BA7D"
+
+# A themed icon keeps only the monochrome layer's alpha and tints it, so
+# anything filled becomes a solid blob: the emblem's sky alone would come out a
+# plain white disc with nothing in it. These three are the drawing's outlines —
+# the ring and the two dune crests — and as strokes on transparency they
+# survive the tinting as a line drawing.
+MONOCHROME = ("circle11", "path3", "path4")
+
+# Those strokes are between 1.0 and 2.1dp once placed, which is legible at
+# 144px and gone by 48. The line drawing has to carry the icon alone, so it is
+# allowed to be heavier than the same lines are inside the full-colour emblem.
+MONOCHROME_STROKE_BOOST = 1.6
 
 
-def dune_points(dune, step=STEP):
-    crest, amplitude_ratio, wavelength, period, direction = dune
-    crest_y = crest * FIELD
-    amplitude = amplitude_ratio * FIELD * (0.5 + 0.5 * INTENSITY)
-    phase = SECONDS * (2 * math.pi / period) * direction
-
-    points, x = [], 0.0
-    while True:
-        xc = min(x, FIELD)
-        nx = (xc / FIELD) * 2 * math.pi * wavelength
-        # Two harmonics, as in the app: one sine reads as a graph, the second
-        # makes the crests uneven enough to read as terrain.
-        offset = (math.sin(nx + phase) * amplitude
-                  + math.cos(nx * 0.5 - phase * 0.6) * (amplitude * 0.35))
-        points.append((xc, crest_y + offset))
-        if xc >= FIELD:
-            break
-        x += step
-    return points
+def style(element):
+    return dict(p.split(":", 1)
+                for p in (element.get("style") or "").split(";") if ":" in p)
 
 
-def dune_path(dune):
-    points = dune_points(dune)
-    return "M0,108" + "".join(f"L{px:g},{py:.1f}" for px, py in points) + "L108,108Z"
+def circle_path(element):
+    """VectorDrawable has no <circle>; two half-arcs draw one."""
+    cx, cy, r = (float(element.get(a)) for a in ("cx", "cy", "r"))
+    return (f"M{cx - r},{cy}a{r},{r} 0 1,0 {2 * r},0"
+            f"a{r},{r} 0 1,0 {-2 * r},0Z")
 
 
-# --------------------------------------------------------------------------
-# The foot
-# --------------------------------------------------------------------------
-# The sole is a width profile swept down the foot: at each fraction of the
-# length, how far the outline sits to the lateral (right) and medial (left)
-# side. The medial column is the one that dips — that dip is the arch, and it
-# is the single feature that stops the silhouette reading as a sack.
-SOLE_Y0, SOLE_LENGTH, SOLE_CX = 42.0, 46.0, 54.0
-CAP_TOP, CAP_BOTTOM = 0.26, 0.22   # elliptical caps, as fractions of the length
-KNOTS = [0.26, 0.36, 0.46, 0.56, 0.66, 0.78]
-LATERAL = [18.0, 17.6, 17.0, 16.2, 15.2, 13.8]
-MEDIAL = [18.0, 17.2, 15.8, 13.6, 11.8, 13.2]
-BALL_HALF_WIDTH = 18.0
+def read_logo():
+    """The foreground layer's shapes, and the transform its group carries."""
+    root = ET.parse(LOGO).getroot()
+    layers = [g for g in root.iter(SVG + "g") if g.get("id") == "layer-fg"]
+    if not layers:
+        raise SystemExit(f"{LOGO}: no layer-fg; was the layer renamed?")
+    groups = [g for g in layers[0] if g.tag == SVG + "g"]
+    if len(groups) != 1:
+        raise SystemExit(f"{LOGO}: expected one group in layer-fg, found {len(groups)}")
 
-# Toes, biggest to smallest. Only the x positions and the radii are chosen; each
-# y falls out of where the ball's dome happens to be under that toe, which is
-# what keeps the row hugging the sole instead of arcing over it like a crown.
-TOE_X = [37.6, 47.2, 55.7, 63.4, 69.8]
-TOE_R = [5.3, 4.0, 3.6, 3.2, 2.8]
-TOE_GAP = 1.2
+    matrix = re.match(r"matrix\(([-\d.,\s]+)\)", groups[0].get("transform", ""))
+    if not matrix:
+        raise SystemExit(f"{LOGO}: the artwork group needs a matrix() transform")
+    a, b, c, d, e, f = (float(v) for v in matrix.group(1).split(","))
+    if b or c or a != d:
+        raise SystemExit(f"{LOGO}: only uniform scale and translate can be baked in")
 
-TILT_DEGREES = -8.0
-# Material's keyline range for artwork inside the 72dp mask is 44-66dp. 55 keeps
-# the foot clear of every mask shape and leaves the field room to be seen.
-CONTENT_DIAMETER = 55.0
-
-OUTLINE_SAMPLES = 140  # dense enough that the caps show no faceting at 512px
-
-
-def _profile(t, column):
-    if t <= KNOTS[0]:
-        return column[0]
-    if t >= KNOTS[-1]:
-        return column[-1]
-    for i in range(len(KNOTS) - 1):
-        if KNOTS[i] <= t <= KNOTS[i + 1]:
-            u = (t - KNOTS[i]) / (KNOTS[i + 1] - KNOTS[i])
-            return column[i] + (column[i + 1] - column[i]) * (u * u * (3 - 2 * u))
-    return column[-1]
+    shapes = []
+    for element in groups[0]:
+        css = style(element)
+        if css.get("display") == "none":
+            continue
+        tag = element.tag.split("}")[1]
+        if tag == "path":
+            data = re.sub(r"\s+", " ", element.get("d").strip())
+        elif tag == "circle":
+            data = circle_path(element)
+        else:
+            continue
+        shapes.append({
+            "id": element.get("id"),
+            "d": data,
+            "fill": css.get("fill", "none"),
+            "stroke": css.get("stroke", "none"),
+            "width": float(css.get("stroke-width", 1.0)),
+        })
+    return shapes, (a, e, f), groups[0]
 
 
-def _cap(t):
-    if t < CAP_TOP:
-        return math.sqrt(max(0.0, 1 - ((CAP_TOP - t) / CAP_TOP) ** 2))
-    if t > 1 - CAP_BOTTOM:
-        return math.sqrt(max(0.0, 1 - ((t - (1 - CAP_BOTTOM)) / CAP_BOTTOM) ** 2))
-    return 1.0
+def fit(scale, translate, ring):
+    """Place the emblem at TARGET_DIAMETER, centred exactly on the layer.
 
+    Measured off the outer ring rather than off a rendered bounding box: the
+    ring is the outermost thing in the drawing, and its stroke hangs half
+    outside its own radius.
+    """
+    cx, cy, r = (float(ring.get(a)) for a in ("cx", "cy", "r"))
+    outer = (r + float(style(ring)["stroke-width"]) / 2) * scale
+    centre = (cx * scale + translate[0], cy * scale + translate[1])
 
-def sole_outline(samples=OUTLINE_SAMPLES):
-    right, left = [], []
-    for i in range(samples + 1):
-        t = i / samples
-        y = SOLE_Y0 + SOLE_LENGTH * t
-        k = _cap(t)
-        right.append((SOLE_CX + _profile(t, LATERAL) * k, y))
-        left.append((SOLE_CX - _profile(t, MEDIAL) * k, y))
-    return right + left[::-1]
-
-
-def _dome_y(x):
-    """Where the top cap's edge sits under a given x."""
-    h = CAP_TOP * SOLE_LENGTH
-    u = (x - SOLE_CX) / BALL_HALF_WIDTH
-    return (SOLE_Y0 + h) - h * math.sqrt(max(0.0, 1 - u * u))
-
-
-TOES = [(x, _dome_y(x) - r - TOE_GAP, r) for x, r in zip(TOE_X, TOE_R)]
-
-
-def place(samples=OUTLINE_SAMPLES):
-    """Tilt, centre and scale the foot onto the 108dp layer."""
-    outline = sole_outline(samples)
-    extremes = list(outline)
-    for x, y, r in TOES:
-        extremes += [(x - r, y), (x + r, y), (x, y - r), (x, y + r)]
-    bx = (min(p[0] for p in extremes) + max(p[0] for p in extremes)) / 2
-    by = (min(p[1] for p in extremes) + max(p[1] for p in extremes)) / 2
-
-    a = math.radians(TILT_DEGREES)
-    ca, sa = math.cos(a), math.sin(a)
-    rot = lambda x, y: ((x - bx) * ca - (y - by) * sa, (x - bx) * sa + (y - by) * ca)
-
-    def radius(scale):
-        worst = max(math.hypot(*(c * scale for c in rot(x, y))) for x, y in outline)
-        for x, y, r in TOES:
-            worst = max(worst, math.hypot(*(c * scale for c in rot(x, y))) + r * scale)
-        return worst
-
-    scale = CONTENT_DIAMETER / (2 * radius(1.0))
-    put = lambda x, y: tuple(54 + c * scale for c in rot(x, y))
-    return ([put(x, y) for x, y in outline],
-            [(*put(x, y), r * scale) for x, y, r in TOES],
-            radius(scale))
-
-
-def foot_path(outline, toes):
-    sole = "M" + "L".join(f"{x:.2f},{y:.2f}" for x, y in outline) + "Z"
-    # VectorDrawable has no <circle>; each toe is two half-arcs.
-    for cx, cy, r in toes:
-        sole += (f"M{cx - r:.2f},{cy:.2f}"
-                 f"a{r:.2f},{r:.2f} 0 1,0 {2 * r:.2f},0"
-                 f"a{r:.2f},{r:.2f} 0 1,0 {-2 * r:.2f},0Z")
-    return sole
+    k = (TARGET_DIAMETER / 2) / outer
+    return (k * scale,
+            k * (translate[0] - centre[0]) + FIELD / 2,
+            k * (translate[1] - centre[1]) + FIELD / 2,
+            2 * outer)
 
 
 # --------------------------------------------------------------------------
@@ -202,184 +144,151 @@ VECTOR = """{comment}<vector xmlns:android="http://schemas.android.com/apk/res/a
 {body}</vector>
 """
 
+GENERATED = ("<!-- Generated by docs/icon.py from design/noisedune-logo.svg.\n"
+             "     Edit the drawing, then re-run the script. Not this file.\n")
 
-def path_element(fill, data):
-    return f'    <path\n        android:fillColor="{fill}"\n        android:pathData="{data}" />\n'
+
+def argb(colour):
+    """`#rrggbb` to the `#aarrggbb` the platform wants."""
+    return colour if len(colour) == 9 else "#FF" + colour.lstrip("#").upper()
+
+
+def path_element(shape, tint=None, boost=1.0):
+    attrs = []
+    if shape["fill"] != "none":
+        attrs.append(f'android:fillColor="{argb(tint or shape["fill"])}"')
+    if shape["stroke"] != "none":
+        attrs.append(f'android:strokeColor="{argb(tint or shape["stroke"])}"')
+        attrs.append(f'android:strokeWidth="{shape["width"] * boost:g}"')
+    attrs.append(f'android:pathData="{shape["d"]}"')
+    body = "\n            ".join(attrs)
+    return f"        <path\n            {body} />\n"
+
+
+def group(scale, tx, ty, body):
+    # A VectorDrawable group scales, then rotates, then translates, so with no
+    # rotation and the pivot at the origin this is exactly the matrix() the
+    # drawing carries, composed with the fit above. Stroke widths scale with it.
+    return (f'    <group\n'
+            f'        android:scaleX="{scale:.6f}"\n'
+            f'        android:scaleY="{scale:.6f}"\n'
+            f'        android:translateX="{tx:.5f}"\n'
+            f'        android:translateY="{ty:.5f}">\n'
+            f'{body}    </group>\n')
 
 
 def write(name, comment, body):
-    path = os.path.join(OUT, f"ic_launcher_{name}.xml")
-    with open(path, "w") as f:
+    path = os.path.join(DRAWABLE, f"ic_launcher_{name}.xml")
+    with open(path, "w", encoding="utf-8") as f:
         f.write(VECTOR.format(comment=comment, body=body))
     print(f"wrote {os.path.relpath(path, os.getcwd())}")
 
 
-# --------------------------------------------------------------------------
-# The store icon
-# --------------------------------------------------------------------------
-# RuStore asks for 512x512, PNG or JPG, under 3 MB, filled with background
-# across its whole area and with no transparent edges. The last part is why this
-# is drawn in RGB with no alpha channel at all rather than composited and then
-# flattened: there is no transparency to lose track of.
-STORE_PX = 512
-STORE_SUPERSAMPLE = 4
+def store_icon(shapes, scale, tx, ty):
+    """The storefront asset: the same emblem, over the same sky, cropped to the
+    72dp a launcher shows, square because the store rounds the corners itself.
+    RGB with no alpha channel, because the store asks for no transparent edges
+    and the way to have none is to never have had any."""
+    from PIL import Image
 
-# A launcher shows the inner 72x72dp of a 108dp adaptive layer. Cropping to
-# exactly that is what makes the listing icon the same picture as the one on the
-# phone; the corners stay square because the storefront rounds them itself, and
-# a second rounding baked in here would show as a dark seam inside the mask.
-STORE_VIEW = (18.0, 72.0)
+    sky = "#" + SKY[3:]            # the drawables want #aarrggbb, SVG wants #rrggbb
+    body = "".join(
+        f'<path d="{s["d"]}"'
+        f' fill="{s["fill"]}" stroke="{s["stroke"]}" stroke-width="{s["width"]:g}"/>'
+        for s in shapes)
+    svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512"'
+           f' viewBox="18 18 72 72">'
+           f'<rect x="0" y="0" width="108" height="108" fill="{sky}"/>'
+           f'<g transform="matrix({scale},0,0,{scale},{tx},{ty})">{body}</g></svg>')
 
-# The vector drawables sample sparsely on purpose — a renderer curves between
-# the points and the files stay small. A raster has no such help, and at 512 px
-# this crop magnifies 108dp sevenfold, which is where the straight segments
-# between samples start to show as facets. Rendering at the drawables' own
-# sampling instead moves 1.9% of the pixels, by up to 88 of 255 on an edge, so
-# this is a visible difference rather than a precaution. It touches nothing that
-# ships in the APK: the drawables are written from the constants above.
-STORE_OUTLINE_SAMPLES = 1200
-STORE_DUNE_STEP = 0.25
+    os.makedirs(os.path.dirname(STORE), exist_ok=True)
+    tmp = STORE + ".svg"
+    with open(tmp, "w", encoding="utf-8") as f:
+        f.write(svg)
+    try:
+        subprocess.run(["rsvg-convert", "-w", "512", "-h", "512", tmp, "-o", STORE],
+                       check=True)
+    except FileNotFoundError:
+        raise SystemExit("rsvg-convert is not installed; the store icon needs it")
+    finally:
+        os.remove(tmp)
 
-
-def _rgb(argb):
-    """`#AARRGGBB` or `#RRGGBB` to a tuple. Alpha is dropped, not blended: every
-    colour in this icon is opaque, and anything else is a bug worth a crash."""
-    digits = argb.lstrip("#")
-    if len(digits) == 8:
-        if digits[:2].upper() != "FF":
-            raise ValueError(f"{argb} is not opaque; the store icon has no alpha")
-        digits = digits[2:]
-    return tuple(int(digits[i:i + 2], 16) for i in (0, 2, 4))
-
-
-def store_icon(path):
-    from PIL import Image, ImageDraw
-
-    outline, toes, _ = place(STORE_OUTLINE_SAMPLES)
-    origin, extent = STORE_VIEW
-    n = STORE_PX * STORE_SUPERSAMPLE
-    scale = n / extent
-
-    def px(x, y):
-        return ((x - origin) * scale, (y - origin) * scale)
-
-    # Supersampled and then reduced, because PIL's polygon fill has no
-    # anti-aliasing of its own and the dune crests are shallow diagonals, which
-    # is the worst case for a hard edge.
-    image = Image.new("RGB", (n, n), _rgb(SKY))
-    draw = ImageDraw.Draw(image)
-
-    for dune, fill in zip(DUNES, DUNE_FILL):
-        crest = dune_points(dune, STORE_DUNE_STEP)
-        points = [px(0, FIELD)] + [px(x, y) for x, y in crest] + [px(FIELD, FIELD)]
-        draw.polygon(points, fill=_rgb(fill))
-
-    amber = _rgb(AMBER)
-    draw.polygon([px(x, y) for x, y in outline], fill=amber)
-    for cx, cy, r in toes:
-        x0, y0 = px(cx - r, cy - r)
-        x1, y1 = px(cx + r, cy + r)
-        draw.ellipse([x0, y0, x1, y1], fill=amber)
-
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    image.resize((STORE_PX, STORE_PX), Image.LANCZOS).save(path, "PNG", optimize=True)
-
-    written = Image.open(path)
-    if written.size != (STORE_PX, STORE_PX) or written.mode != "RGB":
-        raise ValueError(f"wrote {written.size} {written.mode}, wanted 512x512 RGB")
-    size = os.path.getsize(path)
-    print(f"store: {os.path.relpath(path, os.getcwd())}  "
-          f"{written.size[0]}x{written.size[1]} {written.mode}, {size / 1024:.0f} KB "
-          f"(limit 3 MB, no alpha channel)")
+    image = Image.open(STORE)
+    if image.mode != "RGB":
+        image.convert("RGB").save(STORE, "PNG", optimize=True)
+        image = Image.open(STORE)
+    if image.size != (512, 512) or image.mode != "RGB":
+        raise SystemExit(f"wrote {image.size} {image.mode}, wanted 512x512 RGB")
+    size = os.path.getsize(STORE)
+    if size > 3 * 1024 * 1024:
+        raise SystemExit(f"store icon is {size / 1024 / 1024:.1f} MB, over the 3 MB limit")
+    print(f"store: {os.path.relpath(STORE, os.getcwd())}  512x512 RGB, "
+          f"{size / 1024:.0f} KB (limit 3 MB, no alpha channel)")
 
 
-def check(outline, toes, worst):
+def check(diameter, shapes):
     """A launcher mask is unforgiving and invisible until it isn't."""
     ok = True
 
-    def fail(msg):
+    def fail(message):
         nonlocal ok
-        print(f"FAIL {msg}", file=sys.stderr)
+        print(f"FAIL {message}", file=sys.stderr)
         ok = False
 
-    # The mask shows the inner 72x72dp; its roundest form is a 72dp circle.
-    print(f"foot:  content diameter {2 * worst:.1f}dp   (44-66 is Material's keyline range)")
-    if worst >= 36:
-        fail(f"foot reaches {worst:.1f}dp from centre, past the 36dp round mask")
+    print(f"emblem: drawn at {diameter:.1f}dp, placed at {TARGET_DIAMETER:.1f}dp "
+          f"(44-66 is Material's keyline range)")
+    if TARGET_DIAMETER > SAFE_DIAMETER:
+        fail(f"{TARGET_DIAMETER}dp is past the {SAFE_DIAMETER}dp circle every mask shows")
+    if TARGET_DIAMETER > MASK_DIAMETER:
+        fail(f"{TARGET_DIAMETER}dp does not fit the layer's visible {MASK_DIAMETER}dp")
 
-    pts = list(outline)
-    for x, y, r in toes:
-        pts += [(x - r, y), (x + r, y), (x, y - r), (x, y + r)]
-    x0, x1 = min(p[0] for p in pts), max(p[0] for p in pts)
-    y0, y1 = min(p[1] for p in pts), max(p[1] for p in pts)
-    print(f"       bbox x {x0:.1f}..{x1:.1f}  y {y0:.1f}..{y1:.1f}   (safe zone 18..90)")
-    if x0 < 18 or x1 > 90 or y0 < 18 or y1 > 90:
-        fail("foot leaves the 72x72 safe zone")
+    margin = (MASK_DIAMETER - TARGET_DIAMETER) / 2
+    print(f"        {margin:.1f}dp of clearance to the roundest mask")
 
-    # Toes have to stay apart, or the five of them read as one scalloped blob.
-    for i, ((ax, ay, ar), (bx_, by_, br)) in enumerate(zip(toes, toes[1:])):
-        gap = math.hypot(bx_ - ax, by_ - ay) - ar - br
-        if gap < 0.4:
-            fail(f"toes {i + 1} and {i + 2} are {gap:.2f}dp apart; they will merge")
+    missing = [name for name in MONOCHROME
+               if name not in {s["id"] for s in shapes}]
+    if missing:
+        fail(f"the monochrome layer wants {missing}, which the drawing no longer has")
 
-    # And the crests have to stay apart for the same reason.
-    gaps = []
-    for a, b in zip(DUNES, DUNES[1:]):
-        pa, pb = [], []
-        for src, dst in ((a, pa), (b, pb)):
-            crest, ar_, wl, per, dirn = src
-            cy = crest * FIELD
-            amp = ar_ * FIELD * (0.5 + 0.5 * INTENSITY)
-            ph = SECONDS * (2 * math.pi / per) * dirn
-            for i in range(55):
-                x = i * 2.0
-                nx = (x / FIELD) * 2 * math.pi * wl
-                dst.append(cy + math.sin(nx + ph) * amp
-                           + math.cos(nx * 0.5 - ph * 0.6) * (amp * 0.35))
-        gaps.append(min(q - p for p, q in zip(pa, pb)))
-    print(f"dunes: crest gaps {[round(g, 1) for g in gaps]}dp")
-    if min(gaps) < 2.0:
-        fail("dune crests merge at this phase; pick another SECONDS")
-
+    for name in MONOCHROME:
+        for shape in shapes:
+            if shape["id"] == name and shape["stroke"] == "none":
+                fail(f"{name} has no stroke; the monochrome layer would lose it")
     return ok
 
 
 def main():
-    outline, toes, worst = place()
-    if not check(outline, toes, worst):
+    shapes, (scale0, tx0, ty0), group_element = read_logo()
+    rings = [e for e in group_element if e.get("id") == "circle11"]
+    if not rings:
+        raise SystemExit(f"{LOGO}: no circle11; the fit is measured off that ring")
+    scale, tx, ty, drawn = fit(scale0, (tx0, ty0), rings[0])
+
+    if not check(drawn, shapes):
         return 1
 
     if "--store" in sys.argv[1:]:
-        store_icon(os.path.join(
-            os.path.dirname(os.path.abspath(__file__)),
-            "..", "store", "assets", "icon-512.png"))
+        store_icon(shapes, scale, tx, ty)
 
-    foot = foot_path(outline, toes)
+    write("background", GENERATED + """
+     Flat. The emblem brings its own near-black disc; this is only what fills
+     the corners a square mask leaves, in the app's own sky colour. -->
+""", f'    <path\n        android:fillColor="{SKY}"\n'
+     f'        android:pathData="M0,0h108v108H0z" />\n')
 
-    background = path_element(SKY, "M0,0h108v108H0z")
-    for dune, fill in zip(DUNES, DUNE_FILL):
-        background += path_element(fill, dune_path(dune))
+    write("foreground", GENERATED + """
+     The emblem: dunes under a night sky inside a ring. Placed at 63dp so that
+     every mask an OEM might apply has something to crop into. -->
+""", group(scale, tx, ty, "".join(path_element(s) for s in shapes)))
 
-    write("background", """<!-- Generated by docs/icon.py — edit that, not this.
-
-     The app's own dune field, frozen 86 seconds in and at rest. Five crests,
-     back to front, drawn by the generator in NoiseField.kt rather than
-     redrawn by eye, so the icon stays a quotation and not an impression. -->
-""", background)
-
-    write("foreground", """<!-- Generated by docs/icon.py — edit that, not this.
-
-     A baby's foot: the ball, the arch, and five toes largest to smallest. Five
-     shapes stepping down is the figure the old spectrum icon drew and the one
-     the fade-out traces, except here it is anatomy rather than a chart. -->
-""", path_element(AMBER, foot))
-
-    write("monochrome", """<!-- Generated by docs/icon.py — edit that, not this.
-
-     A themed icon keeps only this layer's alpha and tints it, so the foot has
-     to carry the icon alone: no field, no second colour, and nothing knocked
-     out in black — black over amber still has alpha 1 and would vanish here. -->
-""", path_element("#FFFFFFFF", foot))
+    write("monochrome", GENERATED + """
+     A themed icon keeps only this layer's alpha and tints it, so the emblem's
+     fills would come back as one solid disc. What is left is its outlines —
+     the ring and two crests — drawn heavier, because here they are the icon
+     rather than a detail inside it. -->
+""", group(scale, tx, ty, "".join(
+        path_element(s, tint="#FFFFFFFF", boost=MONOCHROME_STROKE_BOOST)
+        for s in shapes if s["id"] in MONOCHROME)))
     return 0
 
 

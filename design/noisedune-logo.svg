@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   id="adaptive-icon-template"
+   width="108"
+   height="108"
+   viewBox="0 0 108 108"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   sodipodi:docname="noisedune-logo.svg"
+   inkscape:export-filename="ic_launcher_preview.png"
+   inkscape:export-xdpi="384"
+   inkscape:export-ydpi="384"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="true"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     units="px"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:zoom="5.6568543"
+     inkscape:cx="34.825009"
+     inkscape:cy="63.727999"
+     inkscape:current-layer="layer-bg"
+     inkscape:window-width="1920"
+     inkscape:window-height="1008"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       id="grid-1dp"
+       type="xygrid"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="1"
+       spacingy="1"
+       empspacing="6"
+       visible="false"
+       enabled="true" />
+    <sodipodi:guide
+       id="av1"
+       position="18,54"
+       orientation="1,0"
+       inkscape:label="viewport L (18)"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       id="av2"
+       position="21,54"
+       orientation="1,0"
+       inkscape:label="safe зона L (21)"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       id="av3"
+       position="54,54"
+       orientation="1,0"
+       inkscape:label="center X"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       id="av4"
+       position="87,54"
+       orientation="1,0"
+       inkscape:label="safe зона R (87)"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       id="av5"
+       position="90,54"
+       orientation="1,0"
+       inkscape:label="viewport R (90)"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       id="ah1"
+       position="54,18"
+       orientation="0,1"
+       inkscape:label="viewport (18)"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       id="ah2"
+       position="54,21"
+       orientation="0,1"
+       inkscape:label="safe зона (21)"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       id="ah3"
+       position="54,54"
+       orientation="0,1"
+       inkscape:label="center Y"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       id="ah4"
+       position="54,87"
+       orientation="0,1"
+       inkscape:label="safe зона (87)"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       id="ah5"
+       position="54,90"
+       orientation="0,1"
+       inkscape:label="viewport (90)"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <!-- ============================================================
+       СЛОЙ 1. BACKGROUND — уйдёт в ic_launcher_background.
+       Заливка на все 108×108, без прозрачности.
+       ============================================================ -->
+  <g
+     inkscape:groupmode="layer"
+     id="layer-bg"
+     inkscape:label="1 · BACKGROUND (108×108 full-bleed)"
+     style="display:none">
+    <rect
+       id="bg"
+       x="0"
+       y="0"
+       width="108"
+       height="108"
+       fill="#ffffff" />
+  </g>
+  <!-- ============================================================
+       СЛОЙ 2. FOREGROUND — уйдёт в ic_launcher_foreground.
+       Логотип рисуй здесь. Холст тоже 108×108, но значимое —
+       только внутри круга ⌀66 по центру.
+       ============================================================ -->
+  <g
+     inkscape:groupmode="layer"
+     id="layer-fg"
+     inkscape:label="2 · FOREGROUND (логотип)"
+     style="display:inline">
+    <!-- твоя графика -->
+    <g
+       id="g12"
+       transform="matrix(2.1239241,0,0,2.1239241,-195.65095,-398.36658)">
+      <path
+         style="display:inline;fill:#816446;fill-opacity:1;stroke:none;stroke-width:1.065;stroke-dasharray:none;stroke-opacity:1"
+         d="m 110.3279,208.00654 -1.14993,2.33273 0.91995,2.49699 3.38409,2.56271 3.1541,1.67562 1.87275,0.52568 2.29987,-1.05136 1.87275,-1.18279 2.16844,-0.72282 1.93846,0.0657 1.60991,0.82138 1.41277,0.91995 1.60991,0.9528 1.21565,0.0657 0.6571,-4.63259 -0.5914,-1.14993 -3.74549,-1.41278 -2.72699,-1.57705 -3.58122,0.0986 -4.23832,2.29987 -4.56688,-2.26702 z"
+         id="path11" />
+      <path
+         style="display:inline;fill:#3e2f21;fill-opacity:1;stroke:none;stroke-width:1.065;stroke-dasharray:none;stroke-opacity:1"
+         d="m 101.88411,212.11345 0.14785,4.28761 1.01851,2.82555 2.18487,-1.13351 2.25059,-1.14993 3.43337,-0.0904 2.02881,0.58318 2.39022,0.39426 2.86662,-0.24641 1.8399,-0.66533 c 0,0 -2.00417,0.34498 -3.15411,-0.32033 -1.13777,-0.65826 -1.51248,-1.53687 -2.15202,-2.08631 -0.75551,-0.64907 -1.42099,-0.93637 -2.08631,-1.24029 -0.66531,-0.30391 -1.67561,-0.82959 -2.07809,-1.28135 -0.40248,-0.45176 -0.73103,-1.08422 -0.63246,-1.7249 0.0986,-0.64068 0.4764,-1.31421 1.01029,-1.49491 0.5339,-0.18071 0.26285,-0.43534 0.26285,-0.43534 l -3.60587,0.69818 -2.06166,1.14993 -1.71669,1.35528 z"
+         id="path9"
+         sodipodi:nodetypes="ccccccccccssssssccccc" />
+      <path
+         style="display:inline;fill:#3e2f21;fill-opacity:1;stroke:none;stroke-width:0.564999;stroke-dasharray:none;stroke-opacity:1"
+         d="m 114.10626,218.04382 1.80704,1.49491 1.7249,1.37992 1.08422,0.80496 3.84406,-0.95281 2.15202,-1.56062 0.26284,-1.77418 -0.62425,-1.00209 1.05137,-1.34706 0.22999,-0.49283 -2.00417,0.36141 -2.34915,1.19921 -1.65919,0.9528 -2.66128,0.70639 -1.52777,0.11499 z"
+         id="path6" />
+      <path
+         style="fill:#5b4631;fill-opacity:1;stroke:none;stroke-width:0.264999;stroke-dasharray:none"
+         d="m 103.44473,219.57159 1.94592,-1.41346 c 0,0 2.03396,-1.19489 3.44674,-1.26882 1.41278,-0.0739 2.58652,0.0222 3.96644,0.77791 1.37992,0.75567 3.15819,2.13646 4.12832,2.85941 0.96483,0.719 2.3167,1.6298 4.14398,2.43493 1.81757,0.80085 3.39313,0.81715 4.03381,0.82536 0.7975,-0.0152 1.49774,-0.19152 2.16306,-0.40505 0.66532,-0.21355 1.82346,-0.40976 1.82346,-0.40976 l 0.18892,0.29569 -2.02881,1.46206 -3.3923,1.19922 -3.5073,-0.13142 -4.29583,-0.96102 -2.49699,-2.12738 -2.33273,-2.45593 -1.25671,-1.22385 -1.85632,-0.96102 -1.63455,0.10678 z"
+         id="path2"
+         sodipodi:nodetypes="ccsssscscccccccccccc" />
+      <path
+         style="fill:#5b4631;fill-opacity:1;stroke:none;stroke-width:0.565;stroke-dasharray:none;stroke-opacity:1"
+         d="m 117.5838,220.86819 c 0,0 1.2371,0.0175 2.05604,-0.0639 0.81893,-0.0813 1.87536,-0.321 2.46842,-0.56338 0.66792,-0.27298 1.31262,-0.58662 1.74241,-1.02222 0.4298,-0.4356 0.48788,-0.6505 0.48207,-1.06287 -0.006,-0.41238 -0.34268,-1.16742 -0.34268,-1.59141 0,-0.42398 0.13359,-0.82474 0.54015,-1.16741 0.40656,-0.34268 0.99899,-0.73181 1.49267,-0.71439 0.49368,0.0174 1.84115,0.45303 1.84115,0.45303 l 1.12565,0.69043 1.3635,1.03494 1.64276,0.68996 0.42712,0.87066 -0.55854,1.14994 -1.00209,1.83989 -0.54211,0.68996 -1.87275,0.70639 -2.31629,0.88709 -3.36767,-0.2957 -2.03702,-0.72281 -1.67562,-0.80495 z"
+         id="path5"
+         sodipodi:nodetypes="ccsscssscccccccccccccc" />
+      <path
+         style="fill:#201512;fill-opacity:1;stroke:none;stroke-width:0.265;stroke-dasharray:none"
+         d="m 103.39545,219.58802 c 0,0 1.85611,-1.27508 2.81826,-1.66716 1.46191,-0.59573 3.02428,-0.21631 3.904,0.23183 1.5093,0.76886 2.13211,1.95533 2.96601,3.00364 0.86244,1.08422 1.2361,1.38044 2.09033,2.01291 0.87895,0.65077 2.95697,1.97131 5.48683,2.26701 2.52985,0.2957 4.33689,-0.13142 5.63467,-0.67353 1.29778,-0.54212 2.77627,-1.87275 2.77627,-1.87275 l 0.39426,0.62425 -2.89126,2.46414 -5.43754,2.497 -5.48682,0.31212 -5.02686,-1.54419 -4.4026,-3.05554 z"
+         id="path1"
+         sodipodi:nodetypes="csssssscccccccc" />
+      <path
+         style="fill:none;fill-opacity:1;stroke:#14110b;stroke-width:0.564999;stroke-dasharray:none;stroke-opacity:1"
+         d="m 132.56854,217.69119 -0.57981,-0.18544 c 0,0 -0.71539,-0.26177 -1.2323,-0.52894 -0.51692,-0.26717 -1.05125,-0.6447 -1.46362,-0.94671 -0.41238,-0.30202 -1.17322,-0.74924 -1.52171,-0.92348 -0.34848,-0.17424 -1.2255,-0.51111 -2.06186,-0.51111 -0.83635,0 -1.48685,0.0929 -2.12574,0.3601 -0.63888,0.26717 -1.81792,0.94671 -2.36968,1.28938 -0.55176,0.34268 -1.39974,0.83636 -2.11993,1.0803 -0.7202,0.24394 -1.66446,0.49559 -2.42196,0.54015 -0.70527,0.0415 -1.73347,-0.0325 -2.29417,-0.0873 -0.53434,-0.0523 -1.49848,-0.30201 -2.00378,-0.5053"
+         id="path4"
+         sodipodi:nodetypes="ccsssssssssc" />
+      <path
+         style="fill:none;fill-opacity:1;stroke:#14110b;stroke-width:0.565;stroke-dasharray:none;stroke-opacity:1"
+         d="m 103.03404,219.48945 2.31221,-1.47881 c 0,0 1.46944,-0.85378 2.14317,-1.02222 0.67373,-0.16843 1.45201,-0.34848 2.17221,-0.33106 0.72019,0.0174 1.70466,0.23232 2.28546,0.43561 0.5808,0.20328 1.65529,0.83635 1.96892,1.05125 0.31364,0.2149 1.7279,1.25454 2.45972,1.82373 0.73181,0.56919 1.8121,1.32423 2.31159,1.64367 0.4995,0.31944 1.40555,0.85959 2.03282,1.14419 0.62727,0.28459 1.62044,0.60984 2.41614,0.75504 0.81064,0.14792 1.89328,0.16066 2.61943,0.11036 0.75504,-0.0523 1.84115,-0.38334 2.41034,-0.575 0.56918,-0.19167 2.42195,-1.15 2.42195,-1.15 v 0"
+         id="path3"
+         sodipodi:nodetypes="ccsssssssssscc" />
+      <path
+         style="fill:#5b4631;fill-opacity:1;stroke:none;stroke-width:1.065;stroke-dasharray:none;stroke-opacity:1"
+         d="m 114.22094,210.20463 c 0,0 1.14494,1.49566 4.0025,2.62242 2.85755,1.12676 4.91745,0.7216 5.52857,0.62926 0.68491,-0.10348 1.42207,-0.49925 1.74732,-0.99874 0.32525,-0.49949 0.0356,-0.95194 -0.21988,-1.34689 -0.25555,-0.39494 -0.54596,-0.66211 -0.56919,-1.12676 -0.0232,-0.46464 0.89444,-0.78989 0.89444,-0.78989 l -2.00958,-0.69697 -6.30753,2.77625 z"
+         id="path10"
+         sodipodi:nodetypes="cssssscccc" />
+      <path
+         style="fill:#131213;fill-opacity:1;stroke:none;stroke-width:1.065;stroke-dasharray:none;stroke-opacity:1"
+         d="m 101.5227,212.49128 c 0,0 1.01851,0.18071 2.43129,-0.41069 1.41277,-0.59139 2.52985,-1.36349 3.46623,-2.06988 0.93637,-0.70639 1.79061,-1.26492 3.05554,-1.28135 1.26492,-0.0164 1.93845,0.44354 2.6777,0.90352 0.73924,0.45997 1.4292,1.28135 2.51342,1.79061 1.08423,0.50925 1.65919,0.59139 2.44772,0.57496 0.78852,-0.0164 1.99894,-0.23782 2.98983,-0.73924 1.36349,-0.68996 2.16836,-1.79064 3.94262,-1.79061 1.64277,3e-5 2.54629,0.80495 3.44981,1.33063 0.90352,0.52569 2.25058,1.44563 4.12333,1.59349 1.609,0.12703 0.34498,-2.497 0.34498,-2.497 l -1.92203,-5.27327 -3.02269,-3.76192 -3.77835,-2.36558 -5.19113,-1.37992 -4.82972,0.31212 -4.27118,1.62634 -3.72907,2.69413 -2.08631,2.80912 -2.05345,4.09048 z"
+         id="path8"
+         sodipodi:nodetypes="cssssssssssccccccccccc" />
+      <circle
+         style="display:inline;fill:none;fill-opacity:1;stroke:#816446;stroke-width:1.10446;stroke-dasharray:none;stroke-opacity:1"
+         id="circle11"
+         cx="117.53681"
+         cy="212.97496"
+         r="16.354824" />
+      <circle
+         style="display:inline;fill:none;fill-opacity:1;stroke:#14110b;stroke-width:1.065;stroke-dasharray:none;stroke-opacity:1"
+         id="path7"
+         cx="117.53681"
+         cy="212.97496"
+         r="15.770516" />
+      <path
+         id="rect12"
+         style="display:none;fill:#816446;fill-opacity:1;stroke:none;stroke-width:0.0601064;stroke-dasharray:none;stroke-opacity:1"
+         d="m 111.84546,202.18845 c 0.34727,-0.021 0.52216,-0.004 0.52708,0.20614 0.0221,0.94048 0.56753,3.67008 -0.45228,4.22751 1.86021,-0.0382 3.93423,-0.036 5.62338,-0.0389 -0.0404,-1.45236 -0.0111,-3.21506 -0.0193,-4.57687 -0.43612,0.0275 -0.7631,0.0408 -1.13648,0.011 0.45021,0.20922 0.2154,2.76042 0.15981,3.98932 l -0.90199,-0.0142 c -0.0183,-1.00027 -0.12127,-2.88844 -0.15217,-4.00102 -0.30992,0 -1.17957,0.0235 -1.17957,0.0235 0.55809,0.11955 0.14167,2.90892 0.1149,3.98641 l -1.04329,-0.0278 c -0.0217,-0.73022 0.11758,-3.52503 0.13681,-3.94049 -0.22721,-0.005 -1.35129,-0.13678 -1.67683,0.15553 z m 7.88882,-0.20202 c -0.23799,0.004 -0.58561,0.41647 -0.58237,0.41548 0.26105,-0.08 0.53084,-0.19861 0.79143,-0.10686 0.27574,0.0971 0.26078,0.78551 0.23891,1.01042 -0.11086,1.14028 -1.22593,2.66129 -1.49325,2.76252 l -0.50696,0.19199 c -0.2561,0.097 -0.34933,1.47424 -0.28447,1.12208 0.11114,-0.60334 0.72816,-0.79533 1.24935,-0.79124 l 2.73032,0.0214 c 0.34215,0.003 0.30668,0.60331 0.21638,0.88927 0.50566,-0.14637 1.00879,-1.28334 0.93827,-1.29665 l -0.80621,-0.1522 c -0.26712,-0.0504 0.0129,-3.7115 0.0333,-4.08321 -0.8417,-0.0116 -1.68306,0.003 -2.52478,0.017 z m 1.62925,0.31697 c -0.008,0.92407 -0.0481,2.78914 -0.0638,3.74219 -0.21739,0.0141 -0.53822,0.0312 -1.86342,0.0312 0.27404,-0.49589 0.57407,-0.87556 0.83555,-1.38267 0.26149,-0.50713 1.0984,-3.17746 1.09168,-2.39082 z"
+         sodipodi:nodetypes="cscccccccccccccsssssssssssccscszs"
+         sodipodi:insensitive="true" />
+    </g>
+  </g>
+  <!-- ============================================================
+       СЛОЙ 3. ЗОНЫ — заблокирован, скрыть перед экспортом.
+       ============================================================ -->
+  <g
+     inkscape:groupmode="layer"
+     id="layer-zones"
+     inkscape:label="3 · ЗОНЫ (скрыть перед экспортом)"
+     sodipodi:insensitive="true"
+     style="display:none">
+    <!-- Срезаемые 18dp по периметру: видно максимум центральные 72×72 -->
+    <path
+       id="bleed-cutoff"
+       fill="#ff1744"
+       fill-opacity="0.18"
+       fill-rule="evenodd"
+       d="M 0,0 H 108 V 108 H 0 Z M 18,18 H 90 V 90 H 18 Z" />
+    <!-- Границы видимой области 72×72 -->
+    <rect
+       id="viewport-72"
+       x="18"
+       y="18"
+       width="72"
+       height="72"
+       fill="none"
+       stroke="#ff1744"
+       stroke-opacity="0.7"
+       stroke-width="0.6"
+       stroke-dasharray="2, 1.5" />
+    <!-- Safe zone: круг ⌀66 — гарантированно виден при ЛЮБОЙ маске OEM -->
+    <circle
+       id="safe-circle-66"
+       cx="54"
+       cy="54"
+       r="33"
+       fill="none"
+       stroke="#00c853"
+       stroke-opacity="0.9"
+       stroke-width="0.8" />
+    <!-- Варианты масок OEM для примерки -->
+    <g
+       fill="none"
+       stroke="#ff00ff"
+       stroke-opacity="0.45"
+       stroke-width="0.5"
+       id="oem-masks">
+      <circle
+         id="mask-circle"
+         cx="54"
+         cy="54"
+         r="36" />
+      <rect
+         id="mask-rounded"
+         x="18"
+         y="18"
+         width="72"
+         height="72"
+         rx="16"
+         ry="16" />
+      <rect
+         id="mask-square"
+         x="18"
+         y="18"
+         width="72"
+         height="72"
+         rx="4"
+         ry="4" />
+    </g>
+    <!-- Оси -->
+    <path
+       id="axes"
+       d="M 54,0 V 108 M 0,54 h 108"
+       fill="none"
+       stroke="#00b0ff"
+       stroke-opacity="0.4"
+       stroke-width="0.4" />
+  </g>
+</svg>

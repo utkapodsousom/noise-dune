@@ -141,6 +141,18 @@ After installing, check by hand:
   shrinks to around 110 dp, the voice name still fits inside it. Check the long
   Russian one, "Коричневый шум": the type scales with the circle, but this is
   where it runs out of room first;
+- **at a 2x font scale**, all four voice labels are still whole — "КОРИЧН." in
+  particular, which is the one that runs out of width. The pills auto-size their
+  type down to fit rather than clipping it, so the failure to look for is a word
+  cut short, not a row that has visibly changed size:
+
+  ```bash
+  adb shell settings put system font_scale 2.0
+  ```
+
+  Put it back to `1.0` afterwards. Note that at that scale the safety notice on
+  first run fills the screen and squeezes the orb out; that is the notice's doing,
+  not the row's, and it clears as soon as it is acknowledged;
 - the metadata line stays readable over the brightest part of the field;
 - the stop time equals the clock plus whatever the countdown under the control
   says, and both it and the header clock follow

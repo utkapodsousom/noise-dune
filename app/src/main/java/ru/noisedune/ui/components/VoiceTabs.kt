@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +21,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import ru.noisedune.R
 import ru.noisedune.dsp.NoiseType
 import ru.noisedune.service.labelRes
@@ -90,14 +95,42 @@ private fun VoicePill(
         },
     ) {
         Box(contentAlignment = Alignment.Center) {
-            Text(
+            // Auto-sized rather than fixed, for the same reason the orb scales
+            // its title: a quarter of the screen is not much, and Russian is the
+            // long case. At a 2x font scale "КОРИЧН." rendered as "КОРИЧ" —
+            // silently clipped, which reads as a broken app rather than as a
+            // word that did not fit. The type now steps down only as far as it
+            // has to, so the user's font scale is still honoured wherever there
+            // is room for it.
+            BasicText(
                 label.uppercase(),
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelSmall.copy(
+                    color = LocalContentColor.current,
+                    textAlign = TextAlign.Center,
+                ),
                 maxLines = 1,
+                // Floored, like the orb's title: past a point a smaller label is
+                // not worth the name being legible at all, and what still does
+                // not fit should be visibly cut rather than quietly truncated.
+                autoSize = TextAutoSize.StepBased(
+                    minFontSize = MIN_LABEL_SP.sp,
+                    maxFontSize = MAX_LABEL_SP.sp,
+                    stepSize = 0.5.sp,
+                ),
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }
 }
+
+/**
+ * The label never grows past the `labelSmall` it is styled with — these are
+ * ornament next to the orb, and a pill that got bigger than its neighbours
+ * would read as selected. Both bounds are sp, so a font scale still multiplies
+ * them; the floor is what the scale is allowed to reach, not a fixed size.
+ */
+private const val MAX_LABEL_SP = 10f
+private const val MIN_LABEL_SP = 7f
 
 /** One word, for a pill that has a quarter of the screen width to work with. */
 private fun NoiseType.shortLabelRes(): Int = when (this) {

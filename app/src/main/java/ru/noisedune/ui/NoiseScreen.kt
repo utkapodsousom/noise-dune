@@ -210,6 +210,7 @@ fun NoiseScreen(
                     settings = settings,
                     status = status,
                     actions = actions,
+                    screenHeight = screenHeight,
                     onOpenSettings = { settingsOpen = true },
                 )
             }
@@ -432,6 +433,7 @@ private fun BottomStack(
     settings: NoiseSettings,
     status: PlaybackStatus,
     actions: NoiseActions,
+    screenHeight: Dp,
     onOpenSettings: () -> Unit,
 ) {
     Column(
@@ -439,7 +441,13 @@ private fun BottomStack(
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         if (!settings.safetyNoticeAcknowledged) {
-            SafetyNotice(onAcknowledge = actions.onSafetyAcknowledged)
+            SafetyNotice(
+                onAcknowledge = actions.onSafetyAcknowledged,
+                // A share of the screen rather than a dp figure, because what
+                // has to survive underneath it is the orb, and the orb is sized
+                // from the screen too.
+                maxHeight = screenHeight * SAFETY_MAX_FRACTION,
+            )
         }
         VoiceTabs(selected = settings.type, onSelect = actions.onTypeSelected)
         VolumeBar(value = settings.volume, onValueChange = actions.onVolumeChanged)
@@ -471,6 +479,14 @@ private fun primaryActionRes(status: PlaybackStatus): Int = when {
     status.isPlaying -> R.string.action_pause
     else -> R.string.action_play
 }
+
+/**
+ * The most of the screen the first-run safety notice may take before its text
+ * starts scrolling inside it. Chosen so the orb still has a workable share at a
+ * 2x font scale, where the notice would otherwise claim everything the weighted
+ * middle of the column had left.
+ */
+private const val SAFETY_MAX_FRACTION = 0.4f
 
 /** How much of the screen the field owns, measured from the bottom. */
 private const val FIELD_FRACTION = 0.48f

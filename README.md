@@ -150,9 +150,13 @@ After installing, check by hand:
   adb shell settings put system font_scale 2.0
   ```
 
-  Put it back to `1.0` afterwards. Note that at that scale the safety notice on
-  first run fills the screen and squeezes the orb out; that is the notice's doing,
-  not the row's, and it clears as soon as it is acknowledged;
+  Put it back to `1.0` afterwards;
+- **at the same scale, with the safety notice showing** — `adb shell pm clear`
+  brings it back — the orb is still there and still readable, the notice has
+  stopped growing at about four tenths of the screen, and its text scrolls inside
+  it while "Понятно" stays put. The failure this replaced was the notice taking
+  the whole column and leaving the orb nothing, so what to look for is the orb,
+  not the notice;
 - the metadata line stays readable over the brightest part of the field;
 - the stop time equals the clock plus whatever the countdown under the control
   says, and both it and the header clock follow

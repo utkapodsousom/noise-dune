@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -20,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.noisedune.R
 
@@ -39,9 +42,26 @@ import ru.noisedune.R
  * same table's 45 dBA maximum is left out because this signal is continuous
  * broadband noise, for which the equivalent and maximum levels coincide —
  * the maximum governs transients, and there are none.
+ *
+ * [maxHeight] is what keeps it from eating the screen. The card sits in a
+ * wrap-content stack at the bottom of a column whose middle child — the orb —
+ * holds the remainder on `weight(1f)`; a remainder is whatever is left, so at a
+ * 2x font scale the card grew until there was nothing left and the orb vanished
+ * entirely. Bounding the card is the fix rather than giving the orb a minimum,
+ * because a weighted child cannot also insist on a floor.
+ *
+ * Only the text scrolls when it has to, and the button never does: a notice you
+ * have to scroll before you can find the way to dismiss it is worse than the
+ * overflow it was meant to solve. The text itself is never shrunk to fit — it is
+ * the one thing on this screen that has to stay readable at the size the reader
+ * asked for.
  */
 @Composable
-fun SafetyNotice(onAcknowledge: () -> Unit, modifier: Modifier = Modifier) {
+fun SafetyNotice(
+    onAcknowledge: () -> Unit,
+    maxHeight: Dp,
+    modifier: Modifier = Modifier,
+) {
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.surface,
@@ -49,18 +69,30 @@ fun SafetyNotice(onAcknowledge: () -> Unit, modifier: Modifier = Modifier) {
         shape = MaterialTheme.shapes.medium,
     ) {
         Column(
-            Modifier.padding(16.dp),
+            Modifier
+                .heightIn(max = maxHeight)
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            Text(
-                stringResource(R.string.safety_title),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-            )
-            Text(
-                stringResource(R.string.safety_body),
-                style = MaterialTheme.typography.bodyMedium,
-            )
+            Column(
+                // fill = false so the card is its natural height whenever that
+                // fits, which is every ordinary font scale: nothing about the
+                // layout changes until the cap actually bites.
+                Modifier
+                    .weight(1f, fill = false)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                Text(
+                    stringResource(R.string.safety_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                )
+                Text(
+                    stringResource(R.string.safety_body),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
             TextButton(onClick = onAcknowledge, modifier = Modifier.align(Alignment.End)) {
                 Text(stringResource(R.string.safety_understood))
             }

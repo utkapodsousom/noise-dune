@@ -394,3 +394,89 @@ DUNE HD is inferred from the owner's line of business rather than read off the
 record, and an authoritative search still needs an account on Rospatent's search
 platform or an attorney's report. The AppGallery storefront reachable from here
 is the European one, so that result wants re-checking from Russia.
+
+## Publishing on RuStore
+
+### APK, not an App Bundle
+
+RuStore takes both. An App Bundle is the right answer for an app whose size is
+spread across densities, locales and ABIs, because the store then ships each
+phone only its own slice. This app has no slices to cut: the release APK is
+1.4 MB, every drawable is a vector, there is one locale, and the only native
+code in it is 73 KB of AndroidX across four ABIs — `libandroidx.graphics.path`
+and DataStore's shared counter, neither of which this project asked for and
+neither of which is worth a build system.
+
+Against that, the AAB path adds a second key that has to be managed forever: the
+upload certificate goes to the console through the PEPK tool, and the store
+signs the delivered APKs itself. Two keys to not lose instead of one, for a
+saving measured in kilobytes of a 1.4 MB download.
+
+Worth revisiting only if the app ever gains something genuinely per-device —
+raster assets, or a native library of its own.
+
+### The store title lost its subtitle
+
+[The name](#the-name) planned to ship as **«Шум Дюн — белый шум для сна
+малыша»**, buying the exact phrase a parent searches. RuStore caps the name at
+30 characters; that title is 34. It also asks that the name match what the phone
+shows under the icon after installation, and the launcher label is «Шум Дюн».
+
+So the name on the storefront is «Шум Дюн», full stop, and the keywords moved
+into the 80-character short description and the five search tags, both of which
+the store indexes. The reasoning that produced the subtitle survives intact —
+«шум» is still the word a parent types, and it is still in the brand itself.
+What it loses is a line of exact-match text in the field with the most weight,
+and that is the cost of a rule rather than a change of mind.
+
+### «Родителям», and 0+
+
+The category is the shelf somebody is standing in front of, not a description of
+the file. «Здоровье» would be a description — noise, sleep, a decibel limit —
+but the person looking is a parent with a baby, and the nearest comparable app
+in the store is filed under Родителям.
+
+0+ follows from the content rather than from ambition: no violence, no
+substances, no romance, no user content, no chat, no purchases, no advertising,
+no network. There is nothing in the app that could earn a higher rating, and
+understating a rating is a documented way to be rejected — here there is nothing
+to understate. The ban on behavioural advertising in 0+ apps is satisfied by
+there being no advertising at all.
+
+### The screenshots come off an emulator, and there is no shade
+
+Four frames: at rest, playing, the settings sheet, and the timer running. They
+are captured by [tools/store-assets.sh](../tools/store-assets.sh), which finds
+what to tap in the accessibility tree by label rather than by coordinate, so the
+sequence survives a different screen and says what it could not find instead of
+tapping at empty space.
+
+The emulator rather than the phone on the desk, because that phone is a 720×1560
+panel on Android 10 and the storefront would be showing a soft picture of a
+sharp app. The emulator is 1080×2400.
+
+There is deliberately no fifth frame of the notification shade, though
+background playback is exactly the claim it would illustrate. An emulator's
+shade carries undismissable notices of its own — set a screen lock, serial
+console enabled — that «Очистить все» does not remove, and a debug build names
+itself «Шум Дюн (dev)» there, which is the one screen in the whole app where the
+label is visible. It is worth adding later from a release build on a real phone.
+
+### The store icon is generated, not exported
+
+`design/play-store-icon-512-template.svg` is a keyline template with an empty
+artwork layer — grid, guides and a mask preview, waiting for a drawing that was
+never made there, because the icon was never drawn by hand. So the 512×512 asset
+comes out of [icon.py](icon.py) with `--store`, from the same constants as the
+launcher drawables: the field, the foot, the amber.
+
+It renders the inner 72×72dp of the 108dp layer, which is exactly what a
+launcher mask shows, and leaves the corners square because the storefront rounds
+them itself. Rasterised at four times and reduced, in RGB with no alpha channel
+at all — the store wants no transparent edges, and the way to not have them is
+to never have had any. The sampling is denser than the drawables use: at 512 px
+this crop magnifies 108dp sevenfold, and rendering at the drawables' own spacing
+moves 1.9% of the pixels by up to 88 of 255 along an edge.
+
+What this buys is that the icon on the listing cannot drift from the icon on the
+phone. There is one description of the picture, and both come out of it.

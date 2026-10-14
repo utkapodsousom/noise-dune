@@ -326,6 +326,14 @@ rather than a conversation — and no regulation number; see
 [docs/decisions.md](docs/decisions.md) for why, and for what the norm does and
 does not actually govern.
 
+## Releasing
+
+The signing key, the build, the checks that have to pass before anybody else
+sees the APK, and the upload itself are in [RELEASE.md](RELEASE.md). The store
+listing — every field, both assets and the reasoning behind the wording — is in
+[store/](store/), and what has to be done by hand outside a terminal is in
+[store/checklist.md](store/checklist.md).
+
 ## Licence and attribution
 
 The DSP algorithms are borrowed from public-domain sources; see

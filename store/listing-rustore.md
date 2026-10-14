@@ -122,7 +122,7 @@
 приложение, не личный, потому что он виден всем на витрине.
 
 ```
-ЗАПОЛНИТЬ: noisedune@…
+noiseduneapp@proton.me
 ```
 
 Тот же адрес стоит в [политике конфиденциальности](../docs/privacy-policy.md) —
@@ -131,7 +131,7 @@
 ## Политика конфиденциальности
 
 ```
-ЗАПОЛНИТЬ: https://<логин>.github.io/noise-dune/privacy/
+https://utkapodsousom.github.io/noise-dune/privacy/
 ```
 
 Текст готов, его остаётся опубликовать: [docs/privacy/index.html](../docs/privacy/index.html).

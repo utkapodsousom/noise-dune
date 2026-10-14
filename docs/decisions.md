@@ -259,28 +259,39 @@ backlight again is not the fix.
 
 ## The name
 
-The store title is **Дюна — шум для сна**; the launcher label, `app_name`, is
-just **Дюна**. They differ on purpose. Russian store search for this category is
-driven by the words a parent actually types — «белый шум», «шум для сна» — so the
-keywords belong in the store title, which is indexed. A launcher is the opposite
-situation: it gives a label something like ten characters before it elides, so
-the long form would arrive under the icon as «Дюна — шум...» and the brand is the
-only part that would have survived anyway. Putting the short form in `app_name`
-is therefore not a compromise, it is the same decision read from the other end.
+The app is called **Шум Дюн** — "the noise of dunes". It is the launcher label
+and the whole of the brand: at seven characters it fits under an icon without
+eliding, so unlike a one-word brand with a descriptive tail, there is no shorter
+form to keep in step with it. `app_name` therefore carries the real name, not an
+abbreviation of it.
 
-The word earns its place by explaining a picture that was already there: the
-field under the orb is five dune silhouettes parallaxing against each other.
-The name was chosen after the field, not before it, which is the right order —
-it describes what the app looks like rather than asking the art to catch up.
+It replaced a first choice of «Дюна», for two reasons that are the same reason.
+A RuStore search for «Дюна» returns the Dune real-time-strategy remakes — ten of
+them across the first page, «Дюна 2», «Open Dune 2», «Пазлы Дюна», all under
+Стратегии — so the bare word puts a baby-sleep app in a queue behind a 1992
+Westwood game. And the word a parent actually types is «шум». Folding it into the
+name instead of leaving it to the subtitle fixes both at once: the brand is no
+longer a homonym of a franchise, and it contains its own keyword.
 
-English is **NoiseDune** rather than «Дюна» transliterated. On its own, "Dune"
-in English is Herbert's novel and Villeneuve's films and nothing else; the
-compound carries the noun that says what the app does. The Russian name does not
-need that help, because it is read next to the subtitle in the store and next to
-the dunes in the app.
+What survives from that first choice is why a dune at all: the field under the
+orb is five dune silhouettes parallaxing against each other. The name was picked
+after the field, not before it, which is the right order — it describes what the
+app looks like rather than asking the art to catch up. The plural is what makes
+it a description of that picture rather than a reference to the novel.
 
-What has **not** been established is whether the word is clear to use. «Дюна» is
-a long-running Russian pop group and a very large film franchise, so a trademark
-search over classes 9 and 42, and a search of RuStore, NashStore and AppGallery,
-are still owed before the first upload. The earlier sweep covered «Баюн», «Тиша»
-and «Полог» — not this name.
+The store title adds a subtitle, because the name alone does not spell out what
+the app is for: **Шум Дюн — белый шум для сна малыша**. «шум» appearing twice
+across the title is a cost accepted on purpose — «белый шум» is the exact phrase
+parents search, and store titles are indexed by token, so paying it buys the
+query. That title belongs to the store listing and appears nowhere in the build.
+
+English is **NoiseDune**, unchanged, and it now matches rather than compensates.
+It was first chosen because "Dune" alone in English is Herbert and Villeneuve and
+nothing else, so the compound had to supply the missing noun; against «Шум Дюн»
+it is simply the same two words in the same order.
+
+What has **not** been established is whether the name is clear to use. The
+phrase is not the pop group and not the film, which makes it a much smaller
+exposure than «Дюна» was, but a trademark search over classes 9 and 42 and a
+sweep of RuStore, NashStore and AppGallery are still owed before the first
+upload. The earlier sweep covered «Баюн», «Тиша» and «Полог» — not this name.

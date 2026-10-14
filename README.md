@@ -1,7 +1,7 @@
 # NoiseDune
 
-Published in Russian as **Дюна — шум для сна**, shortened to **Дюна** under the
-launcher icon. See [the name](docs/decisions.md#the-name).
+Published in Russian as **Шум Дюн**, with the store title carrying a subtitle
+for search. See [the name](docs/decisions.md#the-name).
 
 An Android noise generator for settling infants. White, pink, brown and a
 voiceless "shhh", synthesised in real time — no audio files, no network, no

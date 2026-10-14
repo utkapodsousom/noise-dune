@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--
-        The launcher label, so it is the short name: "Дюна — шум для сна" is the
-        store title and belongs in the store listing, not under the icon, where
-        a launcher gives it about ten characters before it elides.
+        The launcher label, and the whole name: at seven characters it fits under
+        an icon without eliding, so there is no shorter form to keep in step with
+        it. The store title adds a subtitle for search; that lives in the store
+        listing, not here.
     -->
-    <string name="app_name">Дюна</string>
+    <string name="app_name">Шум Дюн</string>
 
     <string name="noise_white">Белый шум</string>
     <string name="noise_pink">Розовый шум</string>

@@ -23,3 +23,6 @@ pepk_out.zip
 
 # Python leftovers from docs/icon.py
 __pycache__/
+
+# Signed builds copied out for upload; rebuilt from the tag, never committed.
+dist/

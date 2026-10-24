@@ -48,7 +48,7 @@ rather than at the build.
 ```
 
 43 tests, then an APK at `app/build/outputs/apk/release/app-release.apk`, about
-1.4 MB. R8 and resource shrinking are on for release; `proguard-rules.pro`
+1.3 MB. R8 and resource shrinking are on for release; `proguard-rules.pro`
 asserts `BuildConfig.DEBUG` is false so the tuning panel is removed as a
 guarantee rather than as an optimisation that happened to fire.
 
@@ -65,10 +65,19 @@ Everything here is one command and answers a question a reviewer could ask.
 $BT/apksigner verify --print-certs --verbose app/build/outputs/apk/release/app-release.apk
 ```
 
-Expect `Verified using v2 scheme: true`, one signer, RSA 4096, and a certificate
-fingerprint equal to the one from the previous release. Record that fingerprint
-somewhere outside the machine the first time: it is how a wrong key gets caught
-before the upload rather than after.
+Expect `Verified using v2 scheme: true`, one signer, RSA 4096, and this
+certificate — the one 1.0 shipped with, and so the one every later version has
+to carry:
+
+```
+CN=Mikhail Kopytin, O=Noise Dune, C=RU
+SHA-256 90638a857da710a730258ff3c3e0b3659d271803a55f46409860bb8903626848
+```
+
+A different fingerprint means a different key, and the store will refuse the
+update. Catching it here costs a rebuild; catching it at the upload costs a
+moderation round. The certificate is public — it is inside every APK — so it is
+safe to keep here; the key and its password are not, and are not.
 
 ```bash
 $BT/aapt2 dump badging app/build/outputs/apk/release/app-release.apk | grep -E "^package|uses-permission|SdkVersion|debuggable"

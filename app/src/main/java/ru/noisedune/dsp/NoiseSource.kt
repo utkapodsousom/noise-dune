@@ -48,8 +48,8 @@ enum class NoiseType(val calibration: Float) {
     /** -6 dB/octave, leaky integrator. */
     BROWN(8.243407f),
 
-    /** Voiceless "shhh", energy humped around 3 kHz. */
-    SHUSH(0.165371f),
+    /** Voiceless "shhh", energy humped around 4 kHz. */
+    SHUSH(0.179371f),
     ;
 
     /**

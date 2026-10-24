@@ -16,7 +16,7 @@
     <string name="noise_white_desc">Ровный спектр</string>
     <string name="noise_pink_desc">−3 дБ/окт, мягче белого</string>
     <string name="noise_brown_desc">−6 дБ/окт, низкий гул</string>
-    <string name="noise_shush_desc">Шипение с пиком на 3 кГц</string>
+    <string name="noise_shush_desc">Шипение с пиком на 4 кГц</string>
 
     <!-- One word each: these go in pills a quarter of the screen wide. -->
     <string name="noise_white_short">Белый</string>

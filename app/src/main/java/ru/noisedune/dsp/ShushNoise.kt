@@ -14,8 +14,10 @@ import kotlin.math.sin
  * hiss. Two band passes in parallel give the broad hump rather than the narrow
  * whistle that high-Q filters produce.
  *
- * Measured: spectral peak 3134 Hz, -3 dB from 1974 to 5270 Hz, 42 dB down below
- * 500 Hz, 12.7 dB down above 10 kHz.
+ * The shipped numbers were settled by ear on a phone speaker in the dev tuning
+ * panel, which pulled the peak up and the hump in from both sides. Measured:
+ * spectral peak 3948 Hz, -3 dB from 2902 to 6933 Hz (1/3-octave smoothed), 54
+ * dB down below 500 Hz, 11.9 dB down above 10 kHz.
  *
  * The slow amplitude modulation is what keeps it from sounding like a synthetic
  * band-passed hiss — it is the breath behind the sound. Deliberately not
@@ -36,21 +38,21 @@ class ShushNoise(
      */
     data class Params(
         /** Nothing useful below the constriction. */
-        val hpHz: Double = 900.0,
+        val hpHz: Double = 1830.0,
         /** Front cavity resonance of [ʃ]. */
-        val f1Hz: Double = 3000.0,
+        val f1Hz: Double = 4275.0,
         /** Low Q: a hump, not a whistle. */
-        val f1Q: Double = 1.1,
-        /** Secondary peak. */
-        val f2Hz: Double = 4400.0,
-        val f2Q: Double = 2.0,
-        val upperFormantGain: Float = 0.5f,
-        /** Gentle roll-off above the peak. */
-        val lpHz: Double = 9000.0,
+        val f1Q: Double = 1.0,
+        /** Secondary peak, sat just above the first to widen it. */
+        val f2Hz: Double = 4425.0,
+        val f2Q: Double = 1.05,
+        val upperFormantGain: Float = 0.44f,
+        /** Roll-off above the peak, soft enough to keep the hump broad. */
+        val lpHz: Double = 4700.0,
         /** The breath behind the sound, not a tremolo. */
-        val amRateHz: Double = 0.15,
-        /** About +-1.5 dB. */
-        val amDepth: Float = 0.17f,
+        val amRateHz: Double = 0.28,
+        /** About +-1 dB. */
+        val amDepth: Float = 0.12f,
     )
 
     private val rng = Rng(seed)

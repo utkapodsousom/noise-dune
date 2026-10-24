@@ -91,13 +91,18 @@ within 0.1 dB of target:
 | White | -10.50 dBFS | 0.112214 | 0.112 |
 | Pink | -25.57 dBFS | 0.635854 | 0.354 |
 | Brown | -47.83 dBFS | 8.243407 | 0.760 |
-| Shush | -13.78 dBFS | 0.165371 | 0.222 |
+| Shush | -14.58 dBFS | 0.179371 | 0.208 |
 
 Measured at 48 kHz. At 44.1 kHz every constant shifts by under 0.4 dB and all in
 the same direction, so the balance between voices survives and one set of numbers
 serves both rates.
 
-Raw generators are *not* bounded to ±1: shush peaks near 1.17 before
+The shush row was re-solved the same way, over five seeds, after its filters
+were retuned by ear (below). In the panel it had also been given +3.9 dB of
+trim, which left it 3.2 dB louder than the other voices; that was dropped in
+favour of the matched level, so switching voice still does not jolt.
+
+Raw generators are *not* bounded to ±1: shush peaks near 1.16 before
 calibration. Bounding is the mixer's job, which is why `NoiseSource` does not
 promise a range.
 
@@ -112,6 +117,16 @@ across only 2216-4183 Hz, which reads as a whistle. The shipped design uses
 Q 1.1 and 2.0 in parallel: peak at 3.0 kHz, -3 dB from 1974 to 5270 Hz, 42 dB
 down below 500 Hz, 12.7 dB down above 10 kHz — a broad hump, which is what a
 real shush is.
+
+That design was then retuned by ear on a phone speaker in the dev tuning panel,
+and the ear moved it up: high pass 900 → 1830 Hz, formants 3000/4400 Hz at
+Q 1.1/2.0 → 4275/4425 Hz at Q 1.0/1.05 (upper gain 0.5 → 0.44), low pass
+9000 → 4700 Hz, breath 0.15 Hz ±1.5 dB → 0.28 Hz ±1 dB. Measured with the
+test suite's periodogram: peak at 3948 Hz, -3 dB from 2902 to 6933 Hz
+(1/3-octave smoothed), 54 dB down below 500 Hz, 11.9 dB down above 10 kHz.
+The peak now sits above the textbook [ʃ] range but still inside the test's
+2-4.5 kHz bound, so it remains a shush rather than an [s]; the bound was left
+where it was.
 
 Note that "spectral slope" is a meaningless statistic for this voice: fitting a
 line across 100 Hz - 10 kHz returns +9.8 dB/octave, which is just the rising

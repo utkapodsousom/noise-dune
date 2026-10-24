@@ -34,15 +34,15 @@ class NoiseTuningTest {
         assertEquals(0.707, brown.highPassQ, 0.0)
 
         val shush = NoiseTuning.FACTORY.shush
-        assertEquals(900.0, shush.hpHz, 0.0)
-        assertEquals(3000.0, shush.f1Hz, 0.0)
-        assertEquals(1.1, shush.f1Q, 0.0)
-        assertEquals(4400.0, shush.f2Hz, 0.0)
-        assertEquals(2.0, shush.f2Q, 0.0)
-        assertEquals(0.5f, shush.upperFormantGain, 0.0f)
-        assertEquals(9000.0, shush.lpHz, 0.0)
-        assertEquals(0.15, shush.amRateHz, 0.0)
-        assertEquals(0.17f, shush.amDepth, 0.0f)
+        assertEquals(1830.0, shush.hpHz, 0.0)
+        assertEquals(4275.0, shush.f1Hz, 0.0)
+        assertEquals(1.0, shush.f1Q, 0.0)
+        assertEquals(4425.0, shush.f2Hz, 0.0)
+        assertEquals(1.05, shush.f2Q, 0.0)
+        assertEquals(0.44f, shush.upperFormantGain, 0.0f)
+        assertEquals(4700.0, shush.lpHz, 0.0)
+        assertEquals(0.28, shush.amRateHz, 0.0)
+        assertEquals(0.12f, shush.amDepth, 0.0f)
     }
 
     @Test
@@ -174,10 +174,10 @@ class NoiseTuningTest {
             .toKotlinSnippet(48_000, "test")
 
         assertTrue("the new value", snippet.contains("val f1Hz: Double = 3600.0,"))
-        assertTrue("the old value", snippet.contains("// was 3000.0"))
+        assertTrue("the old value", snippet.contains("// was 4275.0"))
         // Untouched parameters appear without an annotation, so the block can
         // be pasted whole.
-        assertTrue("an untouched value", snippet.contains("val f2Hz: Double = 4400.0,"))
+        assertTrue("an untouched value", snippet.contains("val f2Hz: Double = 4425.0,"))
         // The trim is folded into the enum's absolute gain, with the sum shown.
         assertTrue("the trim arithmetic", snippet.contains("x +1.5 dB"))
         assertTrue("the device and rate", snippet.contains("test at 48000 Hz"))

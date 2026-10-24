@@ -79,7 +79,7 @@ class NoiseSpectrumTest {
     fun `no voice goes unstable`() {
         // A mistuned biquad does not sound slightly wrong, it diverges to
         // infinity within a second. Raw generators are allowed to overshoot
-        // unity — shush peaks near 1.17 and is brought back by its calibration
+        // unity — shush peaks near 1.16 and is brought back by its calibration
         // gain — so the bound here is loose on purpose; the real output bound is
         // asserted in NoiseCalibrationTest.
         for (type in NoiseType.entries) {

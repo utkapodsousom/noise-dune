@@ -511,14 +511,27 @@ outer ring, including the half of its stroke that hangs outside its radius, it
 is 71.8dp across. A launcher shows 72dp and crops it with a mask of the OEM's
 choosing, so at that size a circular mask shaves the ring flush and some masks
 eat it. Placed at 63dp it sits inside Material's 44–66dp keyline range, inside
-the 66dp circle every mask is guaranteed to show, with 4.5dp of dark between
+the 66dp circle every mask is guaranteed to show, with 4.5dp of amber between
 the ring and the nearest crop.
 
-**The background is flat.** The emblem brings its own near-black disc, so the
-background layer is only what fills the corners a square mask leaves. It is the
-app's sky, `#0C0A09` — close enough to the disc that the seam does not read as
-an edge, dark enough that a square mask looks deliberate rather than
-unfinished.
+**The background is an amber tile.** It was the app's sky, `#0C0A09`, flat,
+chosen so the seam against the emblem's near-black disc would not read as an
+edge. That was the trouble: with nothing to stand against, the disc did not
+read either, and on the phone the icon was a dark smudge among the others. The
+background layer is now a vertical gradient from Ember `#F8BA7D` to Filament
+`#D98E32`, both from `Theme.kt`, run over the 72dp a launcher shows. The night
+stays inside the disc; the tile is the app's warm accent, not a colour brought
+in from outside.
+
+The drawing changed with it, in `design/noisedune-logo.svg` and not in the
+script, so the logo and the icon are still one picture. The dunes were three
+browns within a few steps of black, `#3e2f21` to `#201512` under a `#131213`
+sky, and at 48px their shapes merged; they are lifted to a run from `#f2b774`
+down to `#5a3420`, with the crest lines kept dark so the structure is carried
+by value and not only by line. The two thin rings, brown outside and black
+inside, went the same way as the dunes at that size; there is one dark ring
+now, `#2a170c`, as thick as the two were together and with the same outer edge,
+so the placement above did not move.
 
 **There is no monochrome layer.** Android 13's themed icons keep only that
 layer's alpha and tint it with a colour taken from the wallpaper, which turns
@@ -543,5 +556,5 @@ on a particular phone shows it.
 
 What is no longer true, and was: `design/play-store-icon-512-template.svg` is
 still an empty keyline sheet, and nothing is drawn in it. The store icon is the
-same emblem as the launcher icon, rendered over the same sky and cropped to the
+same emblem as the launcher icon, rendered over the same tile and cropped to the
 same 72dp, square because the storefront rounds the corners itself.

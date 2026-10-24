@@ -39,17 +39,19 @@ SVG = "{http://www.w3.org/2000/svg}"
 # edge to edge, which leaves a circular mask nothing to spare — the ring would
 # be shaved flush. 63dp is the diameter it gets instead: inside Material's
 # 44-66dp keyline range, inside the 66dp circle every mask is guaranteed to
-# show, and with 4.5dp of dark between the ring and the nearest crop.
+# show, and with 4.5dp of amber between the ring and the nearest crop.
 TARGET_DIAMETER = 63.0
 
 FIELD = 108.0
 SAFE_DIAMETER = 66.0   # guaranteed visible under any mask
 MASK_DIAMETER = 72.0   # the most generous mask there is
 
-# The app's own sky, from Theme.kt. The emblem carries its own near-black disc;
-# this is what fills the corners a square mask leaves, and it is close enough to
-# the disc that the seam between them does not read as an edge.
-SKY = "#FF0C0A09"
+# The tile the emblem sits on: Ember at the top running down to Filament, both
+# from Theme.kt. The emblem carries its own night-dark disc, and on a sky-dark
+# background it sank into every wallpaper; amber gives the disc an edge to
+# stand against, in the app's own warm accent rather than a colour from outside.
+TILE_TOP = "#FFF8BA7D"
+TILE_BOTTOM = "#FFD98E32"
 
 # There is deliberately no monochrome layer; see docs/decisions.md. Android 13's
 # themed icons would keep only its alpha, and nothing this emblem can be reduced
@@ -128,7 +130,7 @@ def fit(scale, translate, ring):
 # --------------------------------------------------------------------------
 # Output
 # --------------------------------------------------------------------------
-VECTOR = """{comment}<vector xmlns:android="http://schemas.android.com/apk/res/android"
+VECTOR = """{comment}<vector xmlns:android="http://schemas.android.com/apk/res/android"{ns}
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
@@ -169,28 +171,34 @@ def group(scale, tx, ty, body):
             f'{body}    </group>\n')
 
 
-def write(name, comment, body):
+AAPT = '\n    xmlns:aapt="http://schemas.android.com/aapt"'
+
+
+def write(name, comment, body, ns=""):
     path = os.path.join(DRAWABLE, f"ic_launcher_{name}.xml")
     with open(path, "w", encoding="utf-8") as f:
-        f.write(VECTOR.format(comment=comment, body=body))
+        f.write(VECTOR.format(comment=comment, ns=ns, body=body))
     print(f"wrote {os.path.relpath(path, os.getcwd())}")
 
 
 def store_icon(shapes, scale, tx, ty):
-    """The storefront asset: the same emblem, over the same sky, cropped to the
+    """The storefront asset: the same emblem, over the same tile, cropped to the
     72dp a launcher shows, square because the store rounds the corners itself.
     RGB with no alpha channel, because the store asks for no transparent edges
     and the way to have none is to never have had any."""
     from PIL import Image
 
-    sky = "#" + SKY[3:]            # the drawables want #aarrggbb, SVG wants #rrggbb
+    top, bottom = ("#" + c[3:] for c in (TILE_TOP, TILE_BOTTOM))  # #aarrggbb to #rrggbb
     body = "".join(
         f'<path d="{s["d"]}"'
         f' fill="{s["fill"]}" stroke="{s["stroke"]}" stroke-width="{s["width"]:g}"/>'
         for s in shapes)
     svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512"'
            f' viewBox="18 18 72 72">'
-           f'<rect x="0" y="0" width="108" height="108" fill="{sky}"/>'
+           f'<defs><linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">'
+           f'<stop offset="0" stop-color="{top}"/><stop offset="1" stop-color="{bottom}"/>'
+           f'</linearGradient></defs>'
+           f'<rect x="18" y="18" width="72" height="72" fill="url(#tile)"/>'
            f'<g transform="matrix({scale},0,0,{scale},{tx},{ty})">{body}</g></svg>')
 
     os.makedirs(os.path.dirname(STORE), exist_ok=True)
@@ -252,11 +260,21 @@ def main():
     if "--store" in sys.argv[1:]:
         store_icon(shapes, scale, tx, ty)
 
+    # The gradient runs over the 72dp a launcher shows, not the whole 108dp
+    # field, so the visible tile goes from Ember to Filament edge to edge.
     write("background", GENERATED + """
-     Flat. The emblem brings its own near-black disc; this is only what fills
-     the corners a square mask leaves, in the app's own sky colour. -->
-""", f'    <path\n        android:fillColor="{SKY}"\n'
-     f'        android:pathData="M0,0h108v108H0z" />\n')
+     An amber tile, Ember at the top to Filament at the bottom. The emblem
+     brings its own night-dark disc; this is what it stands against. -->
+""", f'    <path android:pathData="M0,0h108v108H0z">\n'
+     f'        <aapt:attr name="android:fillColor">\n'
+     f'            <gradient\n'
+     f'                android:type="linear"\n'
+     f'                android:startX="54" android:startY="18"\n'
+     f'                android:endX="54" android:endY="90"\n'
+     f'                android:startColor="{TILE_TOP}"\n'
+     f'                android:endColor="{TILE_BOTTOM}" />\n'
+     f'        </aapt:attr>\n'
+     f'    </path>\n', ns=AAPT)
 
     write("foreground", GENERATED + """
      The emblem: dunes under a night sky inside a ring. Placed at 63dp so that

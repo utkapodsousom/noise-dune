@@ -47,7 +47,7 @@ rather than at the build.
 ./gradlew clean :app:testDebugUnitTest :app:assembleRelease
 ```
 
-41 tests, then an APK at `app/build/outputs/apk/release/app-release.apk`, about
+43 tests, then an APK at `app/build/outputs/apk/release/app-release.apk`, about
 1.4 MB. R8 and resource shrinking are on for release; `proguard-rules.pro`
 asserts `BuildConfig.DEBUG` is false so the tuning panel is removed as a
 guarantee rather than as an optimisation that happened to fire.

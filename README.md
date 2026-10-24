@@ -93,7 +93,7 @@ real thing — spectral slope, A-weighted loudness, peak headroom, fade geometry
 ./gradlew :app:testDebugUnitTest
 ```
 
-41 tests, about half a second. They assert on numbers that were measured before
+43 tests, about half a second. They assert on numbers that were measured before
 the code was written (see [docs/decisions.md](docs/decisions.md)) and they have
 teeth — verified by mutation: cutting the Voss-McCartney row count from 16 to 3,
 retuning the shush formant from 3 kHz to 6 kHz, and corrupting brown's

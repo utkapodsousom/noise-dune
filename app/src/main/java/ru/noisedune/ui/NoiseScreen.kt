@@ -265,6 +265,26 @@ private fun Header(
     Row(
         Modifier
             .fillMaxWidth()
+            // Seven taps on this strip inside three seconds open the developer
+            // tuning panel, in debug builds. This strip because the paragraph
+            // above is true — nothing up here is a control, so nothing else
+            // listens to it — and because it sits some 850 dp above the bottom
+            // edge, far outside the arc a thumb sweeps, where it cannot be hit
+            // while reaching for anything real.
+            //
+            // The whole strip, padding included — hence before .padding — and
+            // not the clock alone. The clock's own bounds are about 32×14 dp,
+            // a third of the 48 dp a finger can be expected to hit; a miss does
+            // not count while the three seconds keep running, so two or three
+            // of them and the count never reached seven. Injected taps found
+            // it every time, which is how it looked like it worked.
+            //
+            // pointerInput rather than clickable: clickable would give it a
+            // ripple and a button role, announcing to TalkBack a control that
+            // by design is not one.
+            .pointerInput(Unit) {
+                detectTapGestures { onSecretTap() }
+            }
             .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -277,19 +297,6 @@ private fun Header(
             time,
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            // Seven taps here inside three seconds open the developer tuning
-            // panel, in debug builds. This element because the paragraph above
-            // is true — nothing up here is a control, so nothing else listens
-            // to it — and because it sits some 850 dp above the bottom edge,
-            // far outside the arc a thumb sweeps, where it cannot be hit while
-            // reaching for anything real.
-            //
-            // pointerInput rather than clickable: clickable would give it a
-            // ripple and a button role, announcing to TalkBack a control that
-            // by design is not one.
-            modifier = Modifier.pointerInput(Unit) {
-                detectTapGestures { onSecretTap() }
-            },
         )
     }
 }

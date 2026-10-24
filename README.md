@@ -237,11 +237,13 @@ settings of the app in use.
 ./gradlew :app:installDebug
 ```
 
-Open it with **seven taps on the header clock inside three seconds**. A haptic
-tick confirms it. That element because nothing up there is a control, so nothing
-else listens to it, and because it sits some 850 dp above the bottom edge, well
-outside the arc a thumb sweeps — it cannot be hit while reaching for anything
-real.
+Open it with **seven taps on the header — the clock or anywhere along its strip —
+inside three seconds**. A haptic tick confirms it. That strip because nothing up
+there is a control, so nothing else listens to it, and because it sits some
+850 dp above the bottom edge, well outside the arc a thumb sweeps — it cannot be
+hit while reaching for anything real. The whole strip rather than the clock
+alone: the clock is about 32×14 dp, too small to land on seven times running,
+and a miss does not count while the three seconds keep going.
 
 Inside: every parameter of every voice on a slider, a per-voice trim in
 decibels, and a **Factory values** switch that A/Bs the shipped constants

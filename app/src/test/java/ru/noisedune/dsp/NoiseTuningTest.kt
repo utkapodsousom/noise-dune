@@ -41,8 +41,6 @@ class NoiseTuningTest {
         assertEquals(1.05, shush.f2Q, 0.0)
         assertEquals(0.44f, shush.upperFormantGain, 0.0f)
         assertEquals(4700.0, shush.lpHz, 0.0)
-        assertEquals(0.28, shush.amRateHz, 0.0)
-        assertEquals(0.12f, shush.amDepth, 0.0f)
     }
 
     @Test

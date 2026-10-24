@@ -55,8 +55,6 @@ class DevTuningRepository(private val context: Context) {
                 upperFormantGain =
                     prefs[Keys.SHUSH_UPPER_GAIN] ?: defaults.shush.upperFormantGain,
                 lpHz = prefs[Keys.SHUSH_LP_HZ] ?: defaults.shush.lpHz,
-                amRateHz = prefs[Keys.SHUSH_AM_RATE_HZ] ?: defaults.shush.amRateHz,
-                amDepth = prefs[Keys.SHUSH_AM_DEPTH] ?: defaults.shush.amDepth,
             ),
             whiteTrimDb = prefs[Keys.TRIM_WHITE_DB] ?: defaults.whiteTrimDb,
             pinkTrimDb = prefs[Keys.TRIM_PINK_DB] ?: defaults.pinkTrimDb,
@@ -79,8 +77,6 @@ class DevTuningRepository(private val context: Context) {
             prefs[Keys.SHUSH_F2_Q] = tuning.shush.f2Q
             prefs[Keys.SHUSH_UPPER_GAIN] = tuning.shush.upperFormantGain
             prefs[Keys.SHUSH_LP_HZ] = tuning.shush.lpHz
-            prefs[Keys.SHUSH_AM_RATE_HZ] = tuning.shush.amRateHz
-            prefs[Keys.SHUSH_AM_DEPTH] = tuning.shush.amDepth
             prefs[Keys.TRIM_WHITE_DB] = tuning.whiteTrimDb
             prefs[Keys.TRIM_PINK_DB] = tuning.pinkTrimDb
             prefs[Keys.TRIM_BROWN_DB] = tuning.brownTrimDb
@@ -103,8 +99,6 @@ class DevTuningRepository(private val context: Context) {
         val SHUSH_F2_Q = doublePreferencesKey("shush_f2_q")
         val SHUSH_UPPER_GAIN = floatPreferencesKey("shush_upper_gain")
         val SHUSH_LP_HZ = doublePreferencesKey("shush_lp_hz")
-        val SHUSH_AM_RATE_HZ = doublePreferencesKey("shush_am_rate_hz")
-        val SHUSH_AM_DEPTH = floatPreferencesKey("shush_am_depth")
 
         val TRIM_WHITE_DB = floatPreferencesKey("trim_white_db")
         val TRIM_PINK_DB = floatPreferencesKey("trim_pink_db")

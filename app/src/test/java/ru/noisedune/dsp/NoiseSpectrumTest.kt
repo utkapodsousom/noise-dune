@@ -3,6 +3,7 @@ package ru.noisedune.dsp
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.math.log10
 
 /**
  * The spectral contract of each voice.
@@ -66,6 +67,25 @@ class NoiseSpectrumTest {
     }
 
     @Test
+    fun `shush holds a steady level`() {
+        // A slow swell of a dB or two is something to listen to rather than
+        // something to fall asleep through, and on a narrow-band voice it is
+        // plainly audible. One-second windows of this noise scatter by well
+        // under half a decibel on their own, so a wider spread than the bound
+        // below is a modulation, not chance.
+        val shush = source(NoiseType.SHUSH)
+        val window = FloatArray(Spectrum.SAMPLE_RATE)
+        val levels = DoubleArray(LEVEL_WINDOWS) {
+            shush.render(window, window.size)
+            var power = 0.0
+            for (sample in window) power += sample.toDouble() * sample
+            10.0 * log10(power / window.size)
+        }
+        val spread = levels.max() - levels.min()
+        assertTrue("shush level wandered by $spread dB across one-second windows", spread < 1.0)
+    }
+
+    @Test
     fun `no voice drifts away from zero`() {
         // Pink and brown both random-walk without a DC blocker, and the offset
         // is inaudible but eats peak headroom and pushes the speaker cone.
@@ -93,5 +113,6 @@ class NoiseSpectrumTest {
     private companion object {
         const val SEED = 20_260_207L
         const val SAMPLE_COUNT = 2_000_000
+        const val LEVEL_WINDOWS = 30
     }
 }

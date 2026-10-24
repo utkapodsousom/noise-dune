@@ -49,7 +49,7 @@ enum class NoiseType(val calibration: Float) {
     BROWN(8.243407f),
 
     /** Voiceless "shhh", energy humped around 4 kHz. */
-    SHUSH(0.179371f),
+    SHUSH(0.180302f),
     ;
 
     /**

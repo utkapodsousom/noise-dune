@@ -56,8 +56,6 @@ fun NoiseTuning.toKotlinSnippet(sampleRate: Int, device: String): String {
         ),
     )
     out.appendLine(doubleLine("lpHz", shush.lpHz, factory.shush.lpHz))
-    out.appendLine(doubleLine("amRateHz", shush.amRateHz, factory.shush.amRateHz))
-    out.appendLine(floatLine("amDepth", shush.amDepth, factory.shush.amDepth))
 
     out.appendLine()
     out.appendLine("// --- NoiseType, with each trim multiplied into the calibration.")

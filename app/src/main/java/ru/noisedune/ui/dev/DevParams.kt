@@ -90,22 +90,6 @@ private fun gain(value: Double): String = if (value <= 0.0) {
     String.format(Locale.ROOT, "%.2f (%+.1f dB)", value, 20.0 * kotlin.math.log10(value))
 }
 
-/** The rate, and the period it means — one breath every so many seconds. */
-private fun breathRate(value: Double): String =
-    String.format(Locale.ROOT, "%.2f Hz (%.1f s)", value, 1.0 / value)
-
-/** The depth, and the peak-to-peak swing it produces. */
-private fun depth(value: Double): String = if (value <= 0.0) {
-    "0.00 (flat)"
-} else {
-    String.format(
-        Locale.ROOT,
-        "%.2f (+-%.1f dB)",
-        value,
-        20.0 * kotlin.math.log10(1.0 + value),
-    )
-}
-
 private fun trim(value: Double): String = String.format(Locale.ROOT, "%+.1f dB", value)
 
 // -------------------------------------------------------------------- tables
@@ -259,26 +243,6 @@ internal val SHUSH_PARAMS = listOf(
         format = ::hz,
         get = { it.shush.lpHz },
         set = { t, v -> t.copy(shush = t.shush.copy(lpHz = v)) },
-    ),
-    DevParam(
-        label = "amRateHz",
-        min = 0.02,
-        max = 1.0,
-        logScale = true,
-        step = 0.01,
-        format = ::breathRate,
-        get = { it.shush.amRateHz },
-        set = { t, v -> t.copy(shush = t.shush.copy(amRateHz = v)) },
-    ),
-    DevParam(
-        label = "amDepth",
-        min = 0.0,
-        max = 0.5,
-        logScale = false,
-        step = 0.01,
-        format = ::depth,
-        get = { it.shush.amDepth.toDouble() },
-        set = { t, v -> t.copy(shush = t.shush.copy(amDepth = v.toFloat())) },
     ),
 )
 

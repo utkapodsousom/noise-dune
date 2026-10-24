@@ -91,7 +91,7 @@ within 0.1 dB of target:
 | White | -10.50 dBFS | 0.112214 | 0.112 |
 | Pink | -25.57 dBFS | 0.635854 | 0.354 |
 | Brown | -47.83 dBFS | 8.243407 | 0.760 |
-| Shush | -14.58 dBFS | 0.179371 | 0.208 |
+| Shush | -14.62 dBFS | 0.180302 | 0.208 |
 
 Measured at 48 kHz. At 44.1 kHz every constant shifts by under 0.4 dB and all in
 the same direction, so the balance between voices survives and one set of numbers
@@ -121,12 +121,25 @@ real shush is.
 That design was then retuned by ear on a phone speaker in the dev tuning panel,
 and the ear moved it up: high pass 900 → 1830 Hz, formants 3000/4400 Hz at
 Q 1.1/2.0 → 4275/4425 Hz at Q 1.0/1.05 (upper gain 0.5 → 0.44), low pass
-9000 → 4700 Hz, breath 0.15 Hz ±1.5 dB → 0.28 Hz ±1 dB. Measured with the
-test suite's periodogram: peak at 3948 Hz, -3 dB from 2902 to 6933 Hz
-(1/3-octave smoothed), 54 dB down below 500 Hz, 11.9 dB down above 10 kHz.
-The peak now sits above the textbook [ʃ] range but still inside the test's
-2-4.5 kHz bound, so it remains a shush rather than an [s]; the bound was left
-where it was.
+9000 → 4700 Hz. Measured with the test suite's periodogram: peak at 3948 Hz,
+-3 dB from 2902 to 6933 Hz (1/3-octave smoothed), 54 dB down below 500 Hz,
+11.9 dB down above 10 kHz. The peak now sits above the textbook [ʃ] range but
+still inside the test's 2-4.5 kHz bound, so it remains a shush rather than an
+[s]; the bound was left where it was.
+
+## Shush holds a steady level
+
+Shush used to carry a slow sine "breath" on its amplitude, meant to keep it
+from sounding like a synthetic band-passed hiss: 0.15 Hz at ±1.5 dB, later
+0.28 Hz at ±1 dB. On a band this narrow it was heard as exactly what it was —
+the volume swelling and fading every few seconds, a 2 dB swing measured across
+one-second windows. A sleep sound should give the ear nothing to follow, so the
+modulation was removed outright rather than set to zero, along with its two
+tuning-panel sliders. A test now holds one-second levels within 1 dB of each
+other; without modulation they scatter by a few tenths.
+
+The modulation had added d²/2 to the mean power, so its removal lowered the raw
+level by 0.04 dB and the calibration constant was re-solved over five seeds.
 
 Note that "spectral slope" is a meaningless statistic for this voice: fitting a
 line across 100 Hz - 10 kHz returns +9.8 dB/octave, which is just the rising

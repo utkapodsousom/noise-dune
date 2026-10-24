@@ -91,20 +91,23 @@ within 0.1 dB of target:
 | White | -10.50 dBFS | 0.112214 | 0.112 |
 | Pink | -25.57 dBFS | 0.635854 | 0.354 |
 | Brown | -47.83 dBFS | 8.243407 | 0.760 |
-| Shush | -14.62 dBFS | 0.180302 | 0.208 |
+| Shush | -24.11 dBFS | 0.537708 | 0.224 |
 
 Measured at 48 kHz. At 44.1 kHz every constant shifts by under 0.4 dB and all in
 the same direction, so the balance between voices survives and one set of numbers
 serves both rates.
 
-The shush row was re-solved the same way, over five seeds, after its filters
-were retuned by ear (below). In the panel it had also been given +3.9 dB of
+The shush row was re-solved the same way, over five seeds, each time its
+filters changed: after they were retuned by ear, and again after they were
+refitted to a recording (both below). In the panel it had also been given +3.9 dB of
 trim, which left it 3.2 dB louder than the other voices; that was dropped in
 favour of the matched level, so switching voice still does not jolt.
 
-Raw generators are *not* bounded to ±1: shush peaks near 1.16 before
-calibration. Bounding is the mixer's job, which is why `NoiseSource` does not
-promise a range.
+Raw generators are *not* bounded to ±1. None of the shipped ones exceeds it
+any more — the refitted shush peaks at 0.42 raw, where the earlier tuning
+reached 1.16 — but a resonant filter can, and the panel lets the shush's low
+pass Q reach 8. Bounding is the mixer's job, which is why `NoiseSource` does
+not promise a range.
 
 ## Shush is tuned to [ʃ], not to [s]
 
@@ -127,6 +130,46 @@ Q 1.1/2.0 → 4275/4425 Hz at Q 1.0/1.05 (upper gain 0.5 → 0.44), low pass
 still inside the test's 2-4.5 kHz bound, so it remains a shush rather than an
 [s]; the bound was left where it was.
 
+### Refitted to a recorded shush
+
+The ear-tuned design was then replaced by one fitted to a recording of a real
+shush: 16.5 s of steady [ʃ] on a phone microphone, with the room's own noise
+(hum below 500 Hz, measured in the silence either side) subtracted per bin. The
+recording does not look like the textbook hump:
+
+- a narrow main peak at 2.5 kHz, -3 dB across only 2420-2560 Hz (Q about 18),
+  steady across the whole take;
+- a dip of about 20 dB at 4-5 kHz;
+- a second peak at 6.3-7.5 kHz, about 12 dB below the first;
+- a fall of some 20 dB from 9 to 12 kHz.
+
+The seven existing parameters were fitted to its twelfth-octave spectrum,
+1.1-13.5 kHz, by least squares on the exact filter responses at 48 kHz. The best
+that topology could do was 3.4 dB rms with three parameters pinned at their
+slider limits; freeing the limits gave 3.38, so the limit was the topology. The
+one-pole low pass could neither raise the second peak (8 dB short) nor fall
+fast enough above it (5-7 dB too much above 10 kHz).
+
+So the low pass became a biquad with its own Q, `lpQ`. At Q 3 it peaks at its
+corner, and that resonance *is* the second peak; the upper formant is left with
+a gain of 0.06, filling the dip. Fitted and rounded to the panel's steps: high
+pass 1980 Hz, main formant 2500 Hz at Q 9.55, upper formant 6575 Hz at Q 1.95,
+low pass 6900 Hz at Q 3.0. That is 1.7 dB rms from the recording, no band off by
+more than 3.4 dB below 13 kHz (above it the recording flattens into its noise
+floor while the synthesis keeps falling), against 6.6 dB rms for the ear-tuned
+design. Letting `lpQ` go to 7.3 bought only 0.17 dB more, as a second sharp
+resonance at 7.2 kHz, and was not taken.
+
+Measured with the test suite's periodogram: peak at 2487 Hz, 63 dB down below
+500 Hz, and the 6.4-7.4 kHz band 8.3 dB above the 4.4-5.4 kHz dip, which a test
+now holds at 5 dB or more.
+
+This deliberately goes back on the earlier finding that a high-Q peak "reads as
+a whistle". Q 9.55 is half the recording's own Q and still far narrower than
+the hump it replaces; the aim this time was the recorded voice, not a
+textbook one. The panel's `f1Q` range was raised from 6 to 20 so the
+recording's own width can be reached by ear.
+
 ## Shush holds a steady level
 
 Shush used to carry a slow sine "breath" on its amplitude, meant to keep it
@@ -142,7 +185,7 @@ The modulation had added d²/2 to the mean power, so its removal lowered the raw
 level by 0.04 dB and the calibration constant was re-solved over five seeds.
 
 Note that "spectral slope" is a meaningless statistic for this voice: fitting a
-line across 100 Hz - 10 kHz returns +9.8 dB/octave, which is just the rising
+line across 100 Hz - 10 kHz returns +13.7 dB/octave, which is just the rising
 skirt of a band-pass, not a defect. The tests assert on peak position and band
 balance instead.
 
@@ -260,9 +303,9 @@ continuous and free: no allocation, no crossfade, nothing to hear. The cost is a
 non-final field read per sample, invisible beside the multiplies around it.
 
 The limit is honest rather than hidden: a large coefficient jump leaves state
-that no longer matches the filter, and a high-Q biquad can ring. At the Q values
-these voices use and with the panel's throttled, quantised steps it is
-inaudible.
+that no longer matches the filter, and a high-Q biquad can ring. The highest Q
+in use, the shush's 9.55 at 2.5 kHz, rings out with a time constant of 1.2 ms,
+short beside the panel's throttled, quantised steps.
 
 **Pink's row count is the one exception.** It sizes the generator's bank,
 derives the gain that goes with it and seeds the running sum, so it has to be

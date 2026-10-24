@@ -34,13 +34,14 @@ class NoiseTuningTest {
         assertEquals(0.707, brown.highPassQ, 0.0)
 
         val shush = NoiseTuning.FACTORY.shush
-        assertEquals(1830.0, shush.hpHz, 0.0)
-        assertEquals(4275.0, shush.f1Hz, 0.0)
-        assertEquals(1.0, shush.f1Q, 0.0)
-        assertEquals(4425.0, shush.f2Hz, 0.0)
-        assertEquals(1.05, shush.f2Q, 0.0)
-        assertEquals(0.44f, shush.upperFormantGain, 0.0f)
-        assertEquals(4700.0, shush.lpHz, 0.0)
+        assertEquals(1980.0, shush.hpHz, 0.0)
+        assertEquals(2500.0, shush.f1Hz, 0.0)
+        assertEquals(9.55, shush.f1Q, 0.0)
+        assertEquals(6575.0, shush.f2Hz, 0.0)
+        assertEquals(1.95, shush.f2Q, 0.0)
+        assertEquals(0.06f, shush.upperFormantGain, 0.0f)
+        assertEquals(6900.0, shush.lpHz, 0.0)
+        assertEquals(3.0, shush.lpQ, 0.0)
     }
 
     @Test
@@ -88,7 +89,7 @@ class NoiseTuningTest {
 
     @Test
     fun `retuning a running generator converges on the tuned spectrum`() {
-        val tuned = ShushNoise.Params(f1Hz = 3600.0, f1Q = 2.2, lpHz = 6000.0)
+        val tuned = ShushNoise.Params(f1Hz = 3600.0, f1Q = 4.0, lpHz = 6000.0, lpQ = 0.707)
 
         val built = ShushNoise(Spectrum.SAMPLE_RATE, SEED, tuned)
 
@@ -130,14 +131,13 @@ class NoiseTuningTest {
         val factory = Spectrum.psd(ShushNoise(Spectrum.SAMPLE_RATE, SEED))
         val moved = Spectrum.psd(
             ShushNoise(Spectrum.SAMPLE_RATE, SEED).apply {
-                retune(ShushNoise.Params(f1Hz = 3600.0, f1Q = 2.2, lpHz = 6000.0))
+                retune(ShushNoise.Params(f1Hz = 3600.0, f1Q = 4.0, lpHz = 6000.0, lpQ = 0.707))
             },
         )
-        val top = abs(
-            Spectrum.bandPowerDb(factory, 8_000.0, 16_000.0) -
-                Spectrum.bandPowerDb(moved, 8_000.0, 16_000.0),
-        )
-        assertTrue("dropping the low pass to 6 kHz should cut the top octaves", top > 3.0)
+        // The peak rather than a band level: factory peaks at 2.5 kHz, the
+        // target at 3.6 kHz, so a retune that did nothing cannot pass by luck.
+        val shift = abs(Spectrum.peakFrequencyHz(factory) - Spectrum.peakFrequencyHz(moved))
+        assertTrue("moving the main formant should move the peak (moved $shift Hz)", shift > 500.0)
     }
 
     @Test
@@ -172,10 +172,10 @@ class NoiseTuningTest {
             .toKotlinSnippet(48_000, "test")
 
         assertTrue("the new value", snippet.contains("val f1Hz: Double = 3600.0,"))
-        assertTrue("the old value", snippet.contains("// was 4275.0"))
+        assertTrue("the old value", snippet.contains("// was 2500.0"))
         // Untouched parameters appear without an annotation, so the block can
         // be pasted whole.
-        assertTrue("an untouched value", snippet.contains("val f2Hz: Double = 4425.0,"))
+        assertTrue("an untouched value", snippet.contains("val f2Hz: Double = 6575.0,"))
         // The trim is folded into the enum's absolute gain, with the sum shown.
         assertTrue("the trim arithmetic", snippet.contains("x +1.5 dB"))
         assertTrue("the device and rate", snippet.contains("test at 48000 Hz"))

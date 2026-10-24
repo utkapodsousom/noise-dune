@@ -56,6 +56,21 @@ class NoiseSpectrumTest {
     }
 
     @Test
+    fun `shush keeps the second peak of the recording`() {
+        // The recorded shush rises again by about 9 dB from its dip at 4-5 kHz
+        // to a second peak near 7 kHz. That rise is what the resonant low pass
+        // is for; a one-pole low pass in its place gives none. Equal 1 kHz
+        // bands, so band power compares like with like.
+        val psd = Spectrum.psd(source(NoiseType.SHUSH))
+        val dip = Spectrum.bandPowerDb(psd, 4_400.0, 5_400.0)
+        val second = Spectrum.bandPowerDb(psd, 6_400.0, 7_400.0)
+        assertTrue(
+            "the 6.4-7.4 kHz band should sit at least 5 dB above the dip (was ${second - dip} dB)",
+            second >= dip + 5.0,
+        )
+    }
+
+    @Test
     fun `shush has no low frequency rumble`() {
         val psd = Spectrum.psd(source(NoiseType.SHUSH))
         val lows = Spectrum.bandPowerDb(psd, 20.0, 500.0)
@@ -99,9 +114,10 @@ class NoiseSpectrumTest {
     fun `no voice goes unstable`() {
         // A mistuned biquad does not sound slightly wrong, it diverges to
         // infinity within a second. Raw generators are allowed to overshoot
-        // unity — shush peaks near 1.16 and is brought back by its calibration
-        // gain — so the bound here is loose on purpose; the real output bound is
-        // asserted in NoiseCalibrationTest.
+        // unity — none of the shipped ones does, but a resonant filter can, and
+        // calibration is what brings the level back — so the bound here is
+        // loose on purpose; the real output bound is asserted in
+        // NoiseCalibrationTest.
         for (type in NoiseType.entries) {
             val stats = TimeStats(source(type), SAMPLE_COUNT)
             assertTrue("$type produced a non-finite RMS", stats.rms.isFinite())

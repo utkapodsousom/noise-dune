@@ -14,10 +14,12 @@ interface NoiseSource {
      * Fills `out[0 until frames]` with mono samples at a nominal level of
      * roughly unity.
      *
-     * Not guaranteed to stay inside `[-1, 1]` — the resonant voices overshoot
-     * (shush peaks around 1.17 raw). Bounding the output is [NoiseMixer]'s job,
-     * via [NoiseType.calibration] and [softClip]; a generator that clamped
-     * itself would distort before the gain stages ever saw it.
+     * Not guaranteed to stay inside `[-1, 1]`. The shipped voices do, but a
+     * resonant filter is not bounded by unity at its peak: the shush's low pass
+     * gains about its Q there, and the tuning panel lets that Q reach 8.
+     * Bounding the output is [NoiseMixer]'s job, via [NoiseType.calibration]
+     * and [softClip]; a generator that clamped itself would distort before the
+     * gain stages ever saw it.
      */
     fun render(out: FloatArray, frames: Int)
 }
@@ -48,8 +50,8 @@ enum class NoiseType(val calibration: Float) {
     /** -6 dB/octave, leaky integrator. */
     BROWN(8.243407f),
 
-    /** Voiceless "shhh", energy humped around 4 kHz. */
-    SHUSH(0.180302f),
+    /** Voiceless "shhh", a narrow peak at 2.5 kHz and a second near 7 kHz. */
+    SHUSH(0.537708f),
     ;
 
     /**

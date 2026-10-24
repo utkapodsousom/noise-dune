@@ -20,8 +20,9 @@ import kotlin.math.sin
  * sample, invisible next to the multiplies around it.
  *
  * The honest limit: a *large* jump leaves state that no longer corresponds to
- * the new filter, and a high-Q biquad can ring briefly. At the Q values these
- * voices use (up to 2) and with the panel's throttled steps that is inaudible;
+ * the new filter, and a high-Q biquad can ring briefly. The highest Q in use is
+ * the shush's main resonance, 9.55 at 2.5 kHz, whose ringing decays with a time
+ * constant of Q / (pi f) = 1.2 ms, short beside the panel's throttled steps;
  * the panel's short crossfade covers the pathological full-travel swipe.
  */
 
@@ -127,6 +128,19 @@ class Biquad private constructor() {
         a2 = ((1.0 - alpha) / a0).toFloat()
     }
 
+    /** Re-points this filter as a low pass, keeping its state. */
+    fun setLowPass(sampleRate: Int, freqHz: Double, q: Double) {
+        val w0 = 2.0 * PI * freqHz / sampleRate
+        val c = cos(w0)
+        val alpha = sin(w0) / (2.0 * q)
+        val a0 = 1.0 + alpha
+        b0 = ((1.0 - c) / 2.0 / a0).toFloat()
+        b1 = ((1.0 - c) / a0).toFloat()
+        b2 = ((1.0 - c) / 2.0 / a0).toFloat()
+        a1 = (-2.0 * c / a0).toFloat()
+        a2 = ((1.0 - alpha) / a0).toFloat()
+    }
+
     /** Re-points this filter as a high pass, keeping its state. */
     fun setHighPass(sampleRate: Int, freqHz: Double, q: Double) {
         val w0 = 2.0 * PI * freqHz / sampleRate
@@ -145,6 +159,10 @@ class Biquad private constructor() {
         /** Band pass with constant 0 dB peak gain. */
         fun bandPass(sampleRate: Int, freqHz: Double, q: Double): Biquad =
             Biquad().apply { setBandPass(sampleRate, freqHz, q) }
+
+        /** Low pass, 12 dB/octave; a Q above 0.707 peaks at the corner. */
+        fun lowPass(sampleRate: Int, freqHz: Double, q: Double): Biquad =
+            Biquad().apply { setLowPass(sampleRate, freqHz, q) }
 
         /** High pass, 12 dB/octave. */
         fun highPass(sampleRate: Int, freqHz: Double, q: Double): Biquad =

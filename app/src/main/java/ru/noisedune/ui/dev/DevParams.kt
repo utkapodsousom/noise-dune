@@ -193,7 +193,9 @@ internal val SHUSH_PARAMS = listOf(
     DevParam(
         label = "f1Q",
         min = 0.5,
-        max = 6.0,
+        // Up to 20 because the recorded shush measured Q 18; above that the
+        // band is a whistle by any standard.
+        max = 20.0,
         logScale = true,
         step = 0.05,
         format = ::plain,
@@ -243,6 +245,16 @@ internal val SHUSH_PARAMS = listOf(
         format = ::hz,
         get = { it.shush.lpHz },
         set = { t, v -> t.copy(shush = t.shush.copy(lpHz = v)) },
+    ),
+    DevParam(
+        label = "lpQ",
+        min = 0.5,
+        max = 8.0,
+        logScale = true,
+        step = 0.05,
+        format = ::plain,
+        get = { it.shush.lpQ },
+        set = { t, v -> t.copy(shush = t.shush.copy(lpQ = v)) },
     ),
 )
 
